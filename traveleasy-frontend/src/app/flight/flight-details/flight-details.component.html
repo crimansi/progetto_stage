@@ -1,0 +1,84 @@
+<div class="contDet">
+    <div class="outbound">
+        <h3>Outbound</h3>
+        <div class="cardDet">
+            <div class="block">
+                <span class="descriptionDet">NameAirline</span>
+            </div>
+            <div class="block">
+                <span class="descriptionDet">OraPartenza</span>
+                <span class="descriptionDet">Aereoporto</span>
+            </div>
+            <div class="blockDur">
+                <span class="description">Durata</span>
+                <span class="line"></span>
+                <span class="description">Diretto</span>
+            </div>
+            <div class="block">
+                <span class="descriptionDet">OraArrivo</span>
+                <span class="descriptionDet">Aereoporto</span>
+            </div>  
+        </div>
+        <h5>Seats</h5>
+        <div class="cardDet">
+            <div class="blockOr">
+                <span class="descriptionDet">Seat choice for a fee</span>
+            </div>
+        </div>
+    </div>
+    <div class="return">
+        <h3>Return</h3>
+        <div class="cardDet">
+            <div class="block">
+                <span class="descriptionDet">NameAirline</span>
+            </div>
+            <div class="block">
+                <span class="descriptionDet">OraPartenza</span>
+                <span class="descriptionDet">Aereoporto</span>
+            </div>
+            <div class="blockDur">
+                <span class="description">Durata</span>
+                <span class="line"></span>
+                <span class="description">Diretto</span>
+            </div>
+            <div class="block">
+                <span class="descriptionDet">OraArrivo</span>
+                <span class="descriptionDet">Aereoporto</span>
+            </div>  
+        </div>
+        <h5>Bags</h5>
+        <div class="cardDet">
+            <div class="blockOr">
+                <span class="descriptionDet">Hand baggage has included</span>
+                <button mat-button color="accent">Add bags</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="contPrice">
+    <div class="price">
+        <h3>Price</h3>
+        <div class="cardPrice">
+            <div class="sP">
+                <span>Fare</span>
+                <span>Prezzo</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="sP">
+                <span>Tax</span>
+                <span>Prezzo</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="sP">
+                <span>Other Charges</span>
+                <span>Prezzo</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="sP">
+                <span><b>Total Fare</b></span>
+                <span><b>Prezzo</b></span>
+            </div>
+        </div>
+        <button  mat-flat-button color="accent" class="checkOut" (click)="onCheckClick()">Check out</button>
+</div>
+</div>

@@ -1,0 +1,19 @@
+<div class="container">
+    <mat-form-field appearance="outline">
+        <mat-icon matPrefix>place</mat-icon>
+        <input matInput required placeholder="Going to">
+    </mat-form-field>
+    <mat-form-field appearance="outline" (click)="picker.open()">
+        <mat-date-range-input [rangePicker]="picker" [formGroup]="u.range">
+            <input matStartDate placeholder="Start date" formControlName="start">
+            <input matEndDate placeholder="End date"  formControlName="end">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker startView="month"
+            (daySelected)="u.setRange(u.range.value.start, u.range.value.end, picker)"></mat-date-range-picker>
+        </mat-form-field>
+    <mat-form-field appearance="outline">
+        <input matInput placeholder="Travellers" [value]="u.totalPassengers+ u.str">
+    </mat-form-field>
+    <button class="search" mat-flat-button color="accent">Search</button>
+</div>

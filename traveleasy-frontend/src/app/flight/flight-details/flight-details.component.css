@@ -1,0 +1,61 @@
+.cardDet{
+    display: flex;
+    justify-content: space-between;
+}
+.cardPrice, .cardDet{
+    background: #fdfdfd;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius:15px;
+    padding:8px 16px;
+    height: auto;
+    margin-top:10px;
+    margin-bottom: 10px;
+    max-width: 650px;
+}
+
+.line{
+    position: relative;
+    display: block;
+    width: 90%;
+    height: .125rem;
+    margin: .25rem auto;
+    padding: 0;
+    border-radius: .5rem;
+    background-color: #c1c7cf;
+    line-height: 0;
+    text-align: center;
+
+}
+.blockDur{
+    width: 50%;
+    text-align: center;
+}
+.blockOr{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.contDet,  .sP{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+}
+.outbound{
+    margin-right: 10px;
+}
+.outbound, .return, .price{
+    width: 700px;  
+    align-items: center;
+}
+.contPrice{
+    display: flex;
+    justify-content: center;
+}

@@ -1,0 +1,72 @@
+<div class="container">
+    <mat-form-field appearance="outline" (click)="showSearchFrom = !showSearchFrom; showSearchTo = false" cdkOverlayOrigin #triggerFrom="cdkOverlayOrigin">
+        <mat-icon matPrefix>place</mat-icon>
+        <input matInput required placeholder="Leaving from" [(ngModel)]="origin">
+    </mat-form-field>
+        <button mat-icon-button class="iconButton" (click)="swapInput()">
+            <mat-icon color="accent">compare_arrows</mat-icon>
+        </button>
+    <mat-form-field appearance="outline" (click)="showSearchTo = !showSearchTo; showSearchFrom = false" cdkOverlayOrigin #triggerTo="cdkOverlayOrigin">
+        <mat-icon matPrefix>place</mat-icon>
+        <input matInput required placeholder="Going to"  [(ngModel)]="destination">
+    </mat-form-field>
+    <mat-form-field appearance="outline" (click)="picker.open()">
+        <mat-date-range-input [rangePicker]="picker" [formGroup]="u.range">
+            <input matStartDate placeholder="Start date" formControlName="start">
+            <input matEndDate placeholder="End date"  formControlName="end">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker startView="month"
+            (daySelected)="u.setRange(u.range.value.start, u.range.value.end, picker)"></mat-date-range-picker>
+        </mat-form-field>
+    <mat-form-field appearance="outline" cdkOverlayOrigin #trig="cdkOverlayOrigin" (click)="showTrav = !showTrav">
+        <input matInput placeholder="Travellers" [value]="u.totalPassengers+ u.str">
+    </mat-form-field>
+    <mat-chip-listbox>
+        <mat-chip-option *ngFor="let option of u.passOption" [selected]="option.label === selectedOption.label" (click)="selectedOption = option">{{ option.label }}</mat-chip-option>
+    </mat-chip-listbox> 
+    <button class="search" mat-flat-button color="accent" (click)="searchFlight()">Search</button>
+</div>
+<ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="trig"
+[cdkConnectedOverlayOpen]="showTrav">
+<form class="travellers" *ngIf="showTrav">
+    <div *ngFor="let passengerType of u.passengerTypes" class="passengerPanel">
+        <label for="passengerType">
+            <span>{{ passengerType.label }}</span>
+            <span class="description">{{passengerType.description}}</span>
+        </label>
+        <span class="b">
+            <button mat-mini-fab (click)="u.incrementPassenger(passengerType.type); u.calculateTotal()" [disabled]="u.isIncremetentDisabilited(passengerType.type)">
+                <mat-icon>add</mat-icon>
+            </button>
+            <input id="passengerType" class="number" [value]="u.passengers[passengerType.type]">
+            <button mat-mini-fab (click)="u.decrementPassenger(passengerType.type); u.calculateTotal()" [disabled]="u.isDecrementDisabilited(passengerType.type)">
+                <mat-icon>remove</mat-icon>
+            </button>
+        </span>
+    </div>
+    <div class="passengerPanel">
+        <span></span>
+        <button class="done" mat-button color="accent" (click)="u.calculateTotal(); showTrav = false">Done</button>
+    </div>
+</form>
+</ng-template>
+<!--<ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="triggerFrom"
+[cdkConnectedOverlayOpen]="showSearchFrom">
+<div class="searchCityFrom" *ngIf="showSearchFrom" >
+    <app-city-and-airport-search></app-city-and-airport-search>
+</div>
+</ng-template>
+<ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="triggerTo"
+[cdkConnectedOverlayOpen]="showSearchTo">
+<div class="searchCityTo" *ngIf="showSearchTo">
+    <app-city-and-airport-search></app-city-and-airport-search>
+</div>
+</ng-template>-->
+
+
+
+

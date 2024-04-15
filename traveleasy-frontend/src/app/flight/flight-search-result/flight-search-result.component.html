@@ -1,0 +1,144 @@
+<div class="containerResult">
+    <!-- Header -->
+    <div class="header">
+      <div class="buttons">
+        <button mat-button color="accent" cdkOverlayOrigin #triggerButtonOp="cdkOverlayOrigin" (click)="showOp = !showOp">
+          <span class="label">{{selectedOption.label}}</span>
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+        </button>
+        <button mat-button color="accent" cdkOverlayOrigin #triggerButtonTrav="cdkOverlayOrigin" (click)="showTrav = !showTrav">
+          <span class="label">{{u.totalPassengers + u.str}}</span>
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+      </div>
+      <div class="mat-and-button">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix>place</mat-icon>
+          <input matInput required placeholder="Leaving from" [(ngModel)]="origin">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix>place</mat-icon>
+          <input matInput required placeholder="Going to" [(ngModel)]="destination">
+        </mat-form-field>
+        <mat-form-field appearance="outline" (click)="picker.open()">
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="u.range">
+              <input matStartDate placeholder="Start date" formControlName="start">
+              <input matEndDate placeholder="End date"  formControlName="end">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker startView="month"
+              (daySelected)="u.setRange(u.range.value.start, u.range.value.end, picker)"></mat-date-range-picker>
+          </mat-form-field>
+          <button class="search" mat-flat-button color="accent" (click)="searchFlight()">Search</button>
+      </div>
+    </div>
+    <div class="content">
+
+      <div class="filter">
+        <h1>Filter By</h1>
+        <section class="checkStop">
+          <h4>Stops</h4>
+          <p><mat-checkbox>Direct</mat-checkbox></p>
+          <p><mat-checkbox>1 Stop</mat-checkbox></p>
+          <p><mat-checkbox>2+ Stop</mat-checkbox></p>
+        </section>
+        <section class="checkAirLines"> <!--temporaneo quando faccio la chiamata all'api la faccio correttamente-->
+          <h4>Airlines</h4>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+        </section>
+        <section class="checkAD">
+          <h4>Departure airports</h4>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+        </section>
+        <section class="checkAA">
+          <h4>Arrival airports</h4>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+        </section>
+        <section class="checkSA">
+          <h4>Stops airports</h4>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+          <p><mat-checkbox></mat-checkbox></p>
+        </section>
+      </div>
+      <div class="result">
+        <div class="orderby">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)] ='selectedSort' name="sort" placeholder="Sort by">
+              @for (sort of sorts; track sort){
+                <mat-option [value]="sort.index">{{sort.view}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="singleResult" (click)="onItemClick()">
+         <div class="firstBlock">
+          <span><b>Orari</b></span>
+          <span class="description">CittàPartenza-CittàDestinazione</span>
+          <span class="description">NameAirline</span>
+         </div>
+         <div class="secondBlock">
+          <span class="description">Durata</span>
+         </div>
+         <div class="thirdBlock">
+          <h4>Prezzo</h4>
+          <span class="description">Return for traveller</span>
+         </div>
+        </div>
+        <div class="singleResult" (click)="onItemClick()" cdkOverlayOrigin #triggerDet="cdkOverlayOrigin">
+          <div class="firstBlock">
+           <span><b>Orari</b></span>
+           <span class="description">CittàPartenza-CittàDestinazione</span>
+           <span class="description">NameAirline</span>
+          </div>
+          <div class="secondBlock">
+           <span class="description">Durata</span>
+          </div>
+          <div class="thirdBlock">
+           <h4>Prezzo</h4>
+           <span class="description">Return for traveller</span>
+          </div>
+         </div>
+      </div>
+    </div>
+    </div>
+    <ng-template cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="triggerButtonOp"
+    [cdkConnectedOverlayOpen]="showOp">
+    <div class="optionsF" *ngIf="showOp">
+        <div *ngFor="let option of u.passOption" class="optionPanel" (click)="selectedOption = option; showOp = false">
+            {{option.label}}
+        </div>
+      </div>
+    </ng-template>
+    <ng-template cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="triggerButtonTrav"
+    [cdkConnectedOverlayOpen]="showTrav">
+    <form class="travellers" *ngIf="showTrav">
+        <div *ngFor="let passengerType of u.passengerTypes" class="passengerPanel">
+            <label for="passengerType">
+                <span>{{ passengerType.label }}</span>
+                <span class="description">{{passengerType.description}}</span>
+            </label>
+            <span class="b">
+                <button mat-mini-fab (click)="u.incrementPassenger(passengerType.type)" [disabled]="u.isIncremetentDisabilited(passengerType.type)">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <input id="passengerType" class="number" [value]="u.passengers[passengerType.type]">
+                <button mat-mini-fab (click)="u.decrementPassenger(passengerType.type)" [disabled]="u.isDecrementDisabilited(passengerType.type)">
+                    <mat-icon>remove</mat-icon>
+                </button>
+            </span>
+        </div>
+        <div class="passengerPanel">
+            <button class="cancel" mat-button color="accent" (click)="showTrav = false">Cancel</button>
+            <button class="done" mat-button color="accent" (click)="u.calculateTotal(); showTrav = false">Done</button>
+        </div>
+    </form>
+    </ng-template>

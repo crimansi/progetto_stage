@@ -1,0 +1,12 @@
+<mat-toolbar *ngIf="!isMobile">
+    <span class="title">✈️ {{title}} </span>
+    <button class ="travel" mat-button [matMenuTriggerFor]="travelMenu"> Travel </button>
+    <mat-menu #travelMenu="matMenu">
+      <button mat-menu-item routerLink="/Flight" routerLinkActive><mat-icon>flight</mat-icon>Flights</button>
+      <button mat-menu-item routerLink="/Hotel" routerLinkActive><mat-icon>hotel</mat-icon>Hotels</button>
+      <button mat-menu-item routerLink="/ThingsToDo" routerLinkActive><mat-icon>place</mat-icon>Things to do</button>
+    </mat-menu>
+    <span class="spacer"></span> 
+    <button mat-button color="accent"class="login"> Login</button>
+    <button mat-button class="signUp">SignUp</button>
+  </mat-toolbar>

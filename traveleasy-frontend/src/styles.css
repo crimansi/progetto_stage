@@ -1,0 +1,164 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+html, body { 
+    height: 100%;}
+body { margin: 0; 
+    color: #333;
+    font-family: 'Poppins', sans-serif !important; 
+}
+
+
+html{
+    --mat-toolbar-title-text-font: 'Poppins', sans-serif;
+    --mat-datepicker-calendar-text-font: 'Poppins', sans-serif;
+    --mat-legacy-button-toggle-label-text-font: 'Poppins', sans-serif;
+    --mat-standard-button-toggle-label-text-font: 'Poppins', sans-serif;
+    --mat-bottom-sheet-container-text-font: 'Poppins', sans-serif;
+    --mdc-extended-fab-label-text-font: 'Poppins', sans-serif;
+    --mdc-text-button-label-text-font: 'Poppins', sans-serif;
+    --mdc-outlined-button-label-text-font: 'Poppins', sans-serif;
+    --mdc-protected-button-label-text-font: 'Poppins', sans-serif;
+    --mat-menu-item-label-text-font: 'Poppins', sans-serif;
+    --mat-select-trigger-text-font: 'Poppins', sans-serif;
+    --mdc-outlined-text-field-label-text-font: 'Poppins', sans-serif;
+    --mat-form-field-subscript-text-font: 'Poppins', sans-serif;
+    --mat-optgroup-label-text-font: 'Poppins', sans-serif;
+    --mat-option-label-text-font: 'Poppins', sans-serif;
+    --mat-form-field-container-text-font: 'Poppins', sans-serif;
+}
+
+.spacer{
+    flex: 1 1 auto;
+}
+.mdc-text-field--outlined .mdc-notched-outline__leading{
+    border-radius: 15px 0px 0px 15px !important;
+}
+.mdc-text-field--outlined .mdc-notched-outline__trailing{
+    border-radius: 0px 15px 15px 0px !important;
+}
+.mdc-fab--mini {
+    width: 25px !important;
+    height: 25px !important;
+    padding: 0px !important;
+    box-shadow: none !important;
+}
+.mdc-button .mdc-button__label{
+    font-family: 'Poppins', sans-serif;
+}
+.b {
+    display: flex;
+    align-items: center;
+}
+.number{
+    display: inline-block;
+    border: none !important;
+    width: 13px;
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+    height: 100% !important;
+    line-height: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mat-mdc-standard-chip{
+    --mdc-chip-label-text-font: 'Poppins', sans-serif !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background-color: #fffbfe !important;
+}
+.ng-tns-c3736059725-9{
+    width: 350px !important;
+}
+mat-form-field {
+    margin: 6px 6px 6px 6px;
+  }
+  .mat-mdc-tab-body-content{
+    height:auto !important;
+    overflow: hidden !important;
+  }
+  .mat-mdc-unelevated-button{
+    border-radius: 100px !important;
+  }
+  .mat-mdc-button{
+    border-radius: 100px !important;
+  }
+  .mat-mdc-form-field-subscript-wrapper{
+    height: 0px !important;
+  }
+  .travellers{
+    background-color: #fffbfe;
+    width: 300px;
+    max-height: 400px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 15px;
+  }
+ 
+  .passengerPanel{
+      margin-top:5px;
+      margin-right:5px;
+      margin-left: 5px;
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 100%;
+  }
+  .searchCityFrom, .searchCityTo{
+     width: 400px;
+     height: 500px;
+     border-radius: 15px;
+     background: #fffbfe;
+     text-align: center;
+     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+ }
+ 
+ .description{
+     display: block !important;
+     font-size: 0.75rem;
+     line-height: 1 rem;
+     margin-block-start: 2px;
+ 
+ }
+ p, h3{
+    margin: 0px !important;
+ }
+ .mat-mdc-checkbox{
+    --mdc-form-field-label-text-font: 'Poppins', sans-serif;
+ }
+ 
+ .mdc-checkbox__background{
+    border-radius: 5px !important;
+ }
+ .container {
+    display: flex;
+    margin-top: 15px;
+    margin-left: 9px;
+    margin-bottom: 9px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.search{
+    margin-left: auto;
+    margin-right: 15px;
+ }
+ .cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel{
+    border-radius: 15px !important;
+   }
+.mat-mdc-option{
+    font-size: 14px !important;
+}
+.mat-drawer-inner-container{
+    width: 900px!important;
+   }
+mat-drawer{
+    border-radius: 15px 0px 0px 15px !important;
+    background-color: #fffbfe;
+}
+mat-drawer-content{
+    margin:0px !important;
+}
+.accordion-header{
+    width: 100% !important;
+}
+.checkOut{
+    width: 93%;
+}

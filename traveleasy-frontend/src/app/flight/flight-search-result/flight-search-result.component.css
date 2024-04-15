@@ -1,0 +1,64 @@
+.containerResult {
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .header {
+    align-items: center;
+    gap: 10px;
+  }
+  .buttons{
+    display: flex;
+    flex-direction: row;
+  }
+  .mat-and-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  button {
+    display: flex;
+    flex-direction: row-reverse;
+    text-align: center;
+    margin-left: 4px;
+  }
+  
+  .content {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .filter {
+    flex: 0 0 30%; 
+  }
+  
+  .result {
+    flex: 0 0 70%; 
+  }
+ .optionsF{
+  background-color: #fffbfe;
+  width: 300px;
+  max-height: 400px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 15px;
+ }
+ .optionPanel{
+  margin-left: 5px;
+  margin-top: 5px;
+ }
+ .singleResult{
+  margin-top: 10px;
+  background-color: #fffbfe;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  max-width: 900px;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+ }
+ .orderby{
+  display: flex;
+  width: 900px;
+  flex-direction: row-reverse;
+ }

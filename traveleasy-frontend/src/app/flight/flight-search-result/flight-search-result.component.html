@@ -1,122 +1,230 @@
 <div class="containerResult">
-    <!-- Header -->
-    <div class="header">
-      <div class="buttons">
-        <button mat-button color="accent" cdkOverlayOrigin #triggerButtonOp="cdkOverlayOrigin" (click)="showOp = !showOp">
-          <span class="label">{{selectedOption.label}}</span>
-          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+  <div class="row g-4">
+      <div class="col-lg-6">
+        <ul class="nav nav-pills nav-pills-primary-soft mb-3" id="tour-pills-tab" role="tablist">
+          <li class="nav-item me-2">
+            <a class="nav-link active" data-bs-toggle="tab" href="#tab-roundTrip">Round Trip</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled"data-bs-toggle="tab" href="#tab-oneWay">One Way</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-6 d-flex flex-row">
+        <button type="button" class="btn btn-white rounded-pill text-primary" style="height: 40px;" cdkOverlayOrigin #triggerButtonOp="cdkOverlayOrigin" (click)="showOp = !showOp">
+          <span class="label">{{selectedOption.label}} <i class="bi bi-chevron-compact-down"></i></span>
         </button>
-        <button mat-button color="accent" cdkOverlayOrigin #triggerButtonTrav="cdkOverlayOrigin" (click)="showTrav = !showTrav">
-          <span class="label">{{u.totalPassengers + u.str}}</span>
-          <mat-icon>keyboard_arrow_down</mat-icon>
+        <button type="button" class="btn btn-white rounded-pill text-primary" style="height: 40px" cdkOverlayOrigin #triggerButtonTrav="cdkOverlayOrigin" (click)="showTrav = !showTrav">
+          <span class="label">{{u.totalPassengers + u.str}} <i class="bi bi-chevron-compact-down"></i></span>
         </button>
-      </div>
-      <div class="mat-and-button">
-        <mat-form-field appearance="outline">
-          <mat-icon matPrefix>place</mat-icon>
-          <input matInput required placeholder="Leaving from" [(ngModel)]="origin">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-icon matPrefix>place</mat-icon>
-          <input matInput required placeholder="Going to" [(ngModel)]="destination">
-        </mat-form-field>
-        <mat-form-field appearance="outline" (click)="picker.open()">
-          <mat-date-range-input [rangePicker]="picker" [formGroup]="u.range">
-              <input matStartDate placeholder="Start date" formControlName="start">
-              <input matEndDate placeholder="End date"  formControlName="end">
-          </mat-date-range-input>
-          <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker startView="month"
-              (daySelected)="u.setRange(u.range.value.start, u.range.value.end, picker)"></mat-date-range-picker>
-          </mat-form-field>
-          <button class="search" mat-flat-button color="accent" (click)="searchFlight()">Search</button>
-      </div>
     </div>
-    <div class="content">
-
-      <div class="filter">
-        <h1>Filter By</h1>
-        <section class="checkStop">
-          <h4>Stops</h4>
-          <p><mat-checkbox>Direct</mat-checkbox></p>
-          <p><mat-checkbox>1 Stop</mat-checkbox></p>
-          <p><mat-checkbox>2+ Stop</mat-checkbox></p>
-        </section>
-        <section class="checkAirLines"> <!--temporaneo quando faccio la chiamata all'api la faccio correttamente-->
-          <h4>Airlines</h4>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-        </section>
-        <section class="checkAD">
-          <h4>Departure airports</h4>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-        </section>
-        <section class="checkAA">
-          <h4>Arrival airports</h4>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-        </section>
-        <section class="checkSA">
-          <h4>Stops airports</h4>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-          <p><mat-checkbox></mat-checkbox></p>
-        </section>
-      </div>
-      <div class="result">
-        <div class="orderby">
-          <mat-form-field appearance="outline">
-            <mat-select [(ngModel)] ='selectedSort' name="sort" placeholder="Sort by">
-              @for (sort of sorts; track sort){
-                <mat-option [value]="sort.index">{{sort.view}}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+    </div>
+    <div class="tab-content">
+    <div class="tab-pane show active" id="tab-roundTrip">
+      <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+          <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+            <label class="mb-1"><i class="bi bi-geo-alt"></i> From</label>
+            <input type="text" class="form-control rounded-pill" [(ngModel)]="origin" placeholder="From" aria-label="From" (click)="showSearchFrom = !showSearchFrom; showSearchTo = false" 
+                cdkOverlayOrigin #triggerFrom="cdkOverlayOrigin">
+          </div>
         </div>
-        <div class="singleResult" (click)="onItemClick()">
-         <div class="firstBlock">
-          <span><b>Orari</b></span>
-          <span class="description">CittàPartenza-CittàDestinazione</span>
-          <span class="description">NameAirline</span>
-         </div>
-         <div class="secondBlock">
-          <span class="description">Durata</span>
-         </div>
-         <div class="thirdBlock">
-          <h4>Prezzo</h4>
-          <span class="description">Return for traveller</span>
-         </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+            <label class="mb-1"><i class="bi bi-send"></i> To</label>
+            <input type="text" class="form-control rounded-pill" [(ngModel)]="destination" placeholder="To" aria-label="To" (click)="showSearchTo = !showSearchTo; showSearchFrom = false" 
+                cdkOverlayOrigin #triggerTo="cdkOverlayOrigin">
+          </div> 
         </div>
-        <div class="singleResult" (click)="onItemClick()" cdkOverlayOrigin #triggerDet="cdkOverlayOrigin">
-          <div class="firstBlock">
-           <span><b>Orari</b></span>
-           <span class="description">CittàPartenza-CittàDestinazione</span>
-           <span class="description">NameAirline</span>
+        <div class="col-md-6 col-xl-3">
+          <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+            <label class="mb-1"><i class="bi bi-calendar-event"></i> Date</label>
+            <form class="form-control rounded-pill" (click)="picker.open()" style="display: flex; align-items: center; height: 40px;">
+                            <mat-date-range-input [rangePicker]="picker" [formGroup]="u.range">
+                                <input matStartDate placeholder="Start date" formControlName="start">
+                                <input matEndDate placeholder="End date"  formControlName="end">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker startView="month"
+                                    (daySelected)="u.setRange(u.range.value.start, u.range.value.end, picker)"></mat-date-range-picker>
+            </form>
+          </div> 
+        </div>
+        <div class="col-md-6 col-xl-3  d-flex align-items-center">
+          <div class="text-md-end"> 
+            <button class="btn btn-primary mb-n4 rounded-pill" (click)="searchFlight()">Search</button>
           </div>
-          <div class="secondBlock">
-           <span class="description">Durata</span>
-          </div>
-          <div class="thirdBlock">
-           <h4>Prezzo</h4>
-           <span class="description">Return for traveller</span>
-          </div>
-         </div>
+        </div>
       </div>
     </div>
+    </div> 
+    <!--<div class="tab-pane" id="tab-oneWay">
+            <div class="row g-4">
+                <div class="col-md-6 col-xl-3">
+                    <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                        <label class="mb-1"><i class="bi bi-geo-alt"></i> From</label>
+                        <input type="text" class="form-control rounded-4" [(ngModel)]="origin" placeholder="From" aria-label="From" (click)="showSearchFrom = !showSearchFrom; showSearchTo = false" 
+                        cdkOverlayOrigin #triggerFrom="cdkOverlayOrigin">
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                        <label class="mb-1"><i class="bi bi-send"></i> To</label>
+                        <input type="text" class="form-control rounded-4" [(ngModel)]="destination" placeholder="To" aria-label="To" (click)="showSearchTo = !showSearchTo; showSearchFrom = false" 
+                        cdkOverlayOrigin #triggerTo="cdkOverlayOrigin">
+                    </div> 
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                        <label class="mb-1"><i class="bi bi-calendar-event"></i> Date</label>
+                        <form class="form-control rounded-4" (click)="pick.open()" style="display: flex; align-items: center; height: 40px;">
+                            <input matInput [matDatepicker]="pick" [formControl]="u.date" style="border:none; width: 75%;">
+                            <mat-datepicker-toggle matPrefix [for]="pick"></mat-datepicker-toggle>
+                            <mat-datepicker #pick startView="month"
+                                    (daySelected)="u.setDate(u.date.value, pick)"></mat-datepicker>
+                        </form>
+                    </div> 
+                </div>
+                <div class="col-12 text-end pt-0">
+                    <button class="btn btn-primary mb-n4 rounded-4"> Search</button>
+                </div>
+            </div>
+        </div>
+      </div>-->
     </div>
-    <ng-template cdkConnectedOverlay
+<div class="d-flex justify-content-end" style="margin:10px;">
+  <button class="btn btn-primary d-lg-none mb-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+    <i class="bi bi-sliders"></i>
+    Filters & Sort
+  </button>
+</div>
+<section class="pt-0">
+  <div class="container"  *ngIf="results.length > 0; else noResults">
+    <div class="row">
+      <aside class="col-xl-4 col-xxl-3">
+        <div class="offcanvas-xl offcanvas-end" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasSidebarLabel">Filter By</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
+          </div>
+          <div class="card card-body rounded-0 rounded-top-4 p-4" style="margin-left:10px; margin-right: 10px;">
+            <h6 class="mb-12">Stops</h6>
+            <div class="col-12">
+              <p>
+                <mat-checkbox (change)="handleStopSelection($event, 0)" (value)="'0'"
+                >Direct
+                </mat-checkbox>
+              </p>
+              <p>
+                <mat-checkbox (change)="handleStopSelection($event, 1)" (value)="'1'">
+                  1 Stop
+                </mat-checkbox>
+              </p>
+            </div>
+          </div>
+          <hr class="my-0" *ngIf="setAirline.size > 1"  style="margin-left:10px; margin-right: 10px;">
+          <div class="card card-body rounded-0 p-4" *ngIf="setAirline.size > 1"  style="margin-left:10px; margin-right: 10px;">
+            <h6 class="mb-2">Airlines</h6>
+            <div class="col-12">
+              <p *ngFor="let airline of setAirline">
+                <mat-checkbox  (change)="handleAirlineSelection($event, airline)" [value]="airline">{{airline}}</mat-checkbox>
+              </p>
+            </div>
+          </div>
+          <hr class="my-0" *ngIf="setDepAir.size > 1"  style="margin-left:10px; margin-right: 10px;">
+          <div class="card card-body rounded-0 p-4" *ngIf="setDepAir.size > 1"  style="margin-left:10px; margin-right: 10px;">
+            <h6 class="mb-2">Departure airports</h6>
+            <div class="col-12">
+              <p *ngFor="let airportDep of setDepAir">
+                <mat-checkbox (change)="handleDepartureAirportSelection($event, airportDep)" [value]="airportDep">{{airportDep}}</mat-checkbox>
+              </p>
+            </div>
+          </div>
+          <hr class="my-0" *ngIf="setArAir.size > 1"  style="margin-left:10px; margin-right: 10px;">
+          <div class="card card-body rounded-0 p-4" *ngIf="setArAir.size > 1"  style="margin-left:10px; margin-right: 10px;">
+            <h6 class="mb-12">Arrival airports</h6>
+            <div class="col-12">
+              <p *ngFor="let aiportArr of setArAir">
+                <mat-checkbox (change)="handleArrivalAirportSelection($event, aiportArr)" [value]="aiportArr">{{aiportArr}}</mat-checkbox>
+              </p>
+            </div>
+          </div>
+          <hr class="my-0"  style="margin-left:10px; margin-right: 10px;">
+          <div class="card card-body rounded-0 rounded-bottom-4 p-4"  style="margin-left:10px; margin-right: 10px;">
+            <h6 class="mb-12">Sort</h6>
+            <div class="col-12">
+              <form class="form-control rounded-pill">
+                <mat-select [(ngModel)] ='selectedSort' name="sort" placeholder="Sort by" (selectionChange)="applySorting()">
+                  @for (sort of sorts; track sort){
+                    <mat-option [value]="sort.index">{{sort.view}}</mat-option>
+                  }
+                </mat-select>
+              </form>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div class="col-xl-8 col-xxl-9">
+        <div class="vstack gap-4">
+          <div class="card border rounded-4" *ngFor="let result of results">
+            <div class="card-header d-sm-flex justify-content-sm-between align-items-center rounded-top-4">
+              <h6 class="fw-nomrmal-mb-0">{{result.itineraries[0].segments[0].carrierCode}}</h6>
+              <h6 class="fw-normal mb-0">
+                <span class="text-body">Travel Class:</span>
+                   {{result.travelerPricings[0].fareDetailsBySegment[0].cabin}}</h6>
+            </div>
+            <div class="card-body p-4 pb-0">
+              <div class="row g-4">
+                <div class="col-sm-4 col-md-3">
+                  <h4>{{result.itineraries[0].segments[0].departure.at.slice(11, 16)}}</h4>
+                  <p class="mb-0">{{origin.slice(0, -5)}}({{result.itineraries[0].segments[0].departure.iataCode}})</p>
+                </div>
+                <div class="col-sm-4 col-md-3 my-sm-auto text-center">
+                  <h5>{{result.itineraries[0].duration.slice(2, result.itineraries[0].duration.length).toLowerCase()}}</h5>
+                  <div class="position-relative my-4">
+                    <hr class="bg-primary opacity-5 position-relative">
+                    <div class="icon-airplane bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle">
+                      <span style="display: inline-block; transform: rotate(90deg);">
+                        <i class="bi bi-airplane-fill"></i>
+                    </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                  <h4>{{result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.at.slice(11, 16)}}</h4>
+                  <p class="mb-0">{{destination.slice(0, -5)}}({{result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.iataCode}})</p>
+                </div>
+                <div class="col-md-3 text-md-end">
+                  <h4>{{result.travelerPricings[0].price.base}} €</h4>
+                  <button type="button" class="btn btn-primary rounded-pill mb-0 mb-sm-2" (click)="onBookClick(result)">Book Now</button>
+                  <button class="btn btn-link text-decoration-underline p-0 mb-0" data-bs-toggle="modal" data-bs-target="#flightdetail" (click)="onItemClick(result)">
+                    <i class="bi bi-eye-fill"></i>
+                    Flight Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noResults>
+    <div class="alert alert-light text-center" role="alert" style="max-width: 400px; margin: 0 auto;">
+      <h4><i class="bi bi-info-circle"></i> Sorry we couldn't find any flights!</h4>
+      <p>Try searching nearby airports or alternative dates.</p> 
+    </div>
+  </ng-template>
+</section>
+<ng-template cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="triggerButtonOp"
     [cdkConnectedOverlayOpen]="showOp">
-    <div class="optionsF" *ngIf="showOp">
-        <div *ngFor="let option of u.passOption" class="optionPanel" (click)="selectedOption = option; showOp = false">
+  <div class="optionsF" *ngIf="showOp">
+    <div *ngFor="let option of u.passOption" class="optionPanel" (click)="selectedOption = option; showOp = false" style="cursor: pointer;">
             {{option.label}}
-        </div>
-      </div>
-    </ng-template>
+    </div>
+  </div>
+</ng-template>
     <ng-template cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="triggerButtonTrav"
     [cdkConnectedOverlayOpen]="showTrav">
@@ -142,3 +250,20 @@
         </div>
     </form>
     </ng-template>
+    <ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="triggerFrom"
+[cdkConnectedOverlayOpen]="showSearchFrom">
+<div class="searchCityFrom" *ngIf="showSearchFrom" >
+    <app-city-and-airport-search></app-city-and-airport-search>
+</div>
+</ng-template>
+<ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="triggerTo"
+[cdkConnectedOverlayOpen]="showSearchTo">
+<div class="searchCityTo" *ngIf="showSearchTo">
+    <app-city-and-airport-search></app-city-and-airport-search>
+</div>
+</ng-template>
+<div class="modal fade" id="flightdetail" data-bs-backdrop="static" style="display: none;" aria-hidden="true">
+  <app-flight-details [price]="price" [strBags]="strBags" [tax]="tax"></app-flight-details>
+</div>

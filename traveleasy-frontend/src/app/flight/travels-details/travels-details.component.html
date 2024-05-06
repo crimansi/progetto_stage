@@ -1,1 +1,128 @@
-<h2>Who's travelling?</h2>
+<div class="alert alert-success" role="alert" style="margin:20px;" *ngIf="booked">
+    <div class="d-flex justify-content-between" role="alert">
+        <h1>🎊 Congratulations! 🎊</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <hr>
+    <p>Your flight has been booked</p>
+  </div>
+<section class="row g-0">
+    <div class="col-xl-8">
+        <div class="vstack gap-4" *ngIf="offerFlight.length > 0 && offerFlight">
+            <h1 class="display-4 mb-0" style="margin:20px">
+                <i class="bi bi-person-fill"></i> Traveler Details
+            </h1>
+            <div class="card rounded-4" *ngFor="let trav of offerFlight[0].travelerPricings; let i = index" style="margin-left: 20px; margin-right:20px; margin-bottom: 20px;">
+                <div class="card-header border-bottom px-4 rounded-top-4">
+                    <h3 class="card-title mb-0">{{trav.travelerId}} Passenger</h3>
+                </div>
+                <div class="card-body py-4">
+                    <div class="row g-4">
+                        <div class="col-md-9">
+                            <label class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control rounded-start-pill" placeholder="First Name" [(ngModel)]="travelers[i].name.firstName" name="firstName">
+                                <input type="text" class="form-control rounded-end-pill" placeholder="Last Name" [(ngModel)]="travelers[i].name.lastName" name="lastName">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date of Birth</label>
+                            <form class="row row-cols-sm-auto">
+                                <div class="col-12">
+                                    <div class="form-control rounded-pill d-flex align-items-center" style="height: 40px;">
+                                        <input class="" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" style="border:none;"
+                                        [minDate]="{year: 1950, month: 1, day: 1}" [maxDate]="{year: 2024, month: 12, day: 31}" [(ngModel)]="dateOfBirthNonFormat[i]"
+                                        name="dateOfBirth"/>
+                                        <button class="btn rounded-circle" (click)="d.toggle()" type="button"><i class="bi bi-calendar"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Gender</label>
+                            <form class="rounded-pill form-control">
+                            <mat-select placeholder="Gender" [(ngModel)]="travelers[i].gender" name="gender">
+                                @for(gender of genders; track gender){
+                                    <mat-option [value]="gender">{{gender}}</mat-option>
+                                }
+                            </mat-select>  
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="display-4 mb-0" style="margin:20px">
+                <i class="bi bi-airplane-fill"></i> Flight Summary
+            </h1>
+            <div class="card border rounded-4" *ngFor="let it of offerFlight[0].itineraries" style="margin-left: 20px; margin-right:20px; margin-bottom: 20px;">
+                <div class="card-header rounded-top-4">
+                    <div class="d-sm-flex justify-content-sm-between align-items-center">
+                        <h6 class="fw-normal mb-0">{{it.segments[0].carrierCode}}</h6>
+                        <h6 class="fw-normal mb-0">
+                            <span class="text-body">Travel Class:</span>
+                                {{offerFlight[0].travelerPricings[0].fareDetailsBySegment[0].cabin}}
+                        </h6>
+                    </div>
+                </div>
+                <div class="card-body p-4" style="margin-left: 20px; margin-right:20px;">
+                    <div *ngFor="let stop of it.segments; let i = index">
+                        <div class="row g-4">
+                            <div class="col-sm-2 d-flex flex-column justify-content-end">
+                                <h4 class="text-end">{{stop.departure.iataCode}}</h4>
+                                <h6 class="mb-0 text-end">{{stop.departure.at.slice(11, 16)}}</h6>
+                            </div>
+                            <div class="col-sm-8 my-sm-auto text-center">
+                                <h5>{{stop.duration.slice(2, stop.duration.length).toLowerCase()}}</h5>
+                                <div class="position-relative my-4">
+                                    <hr class="bg-primary opacity-5 position-relative">
+                                    <div class="icon-airplane bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle">
+                                        <span style="display: inline-block; transform: rotate(90deg);">
+                                            <i class="bi bi-airplane-fill"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <h4>{{stop.arrival.iataCode}}</h4>
+                                <h6 class="mb-0">{{stop.arrival.at.slice(11, 16)}}</h6>
+                            </div>
+                        </div>
+                        <div class="bg-light text-center fw-normal rounded-2 mt-3 mb-4 p-2" *ngIf="i !== it.segments.length - 1">
+                            Change of plane
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="col-md-6 col-xl-12" style="margin-top: 20px;">
+            <div class="card bg-light rounded-4 border" *ngIf="offerFlight && offerFlight.length > 0"style="margin:20px">
+                <div class="card-header bg-light rounded-top-4">
+                    <h5 class="card-title mb-0">Fare Summary</h5>
+                </div>
+                <div class="card-body bg-light">
+                    <ul class="list-group bg-light border-0">
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light border-0">
+                            <span class="h6 fw-normal mb-0">Base Fare</span>
+                            <span class="fs-5">{{offerFlight[0].price.total}} €</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light border-0">
+                            <span class="h6 fw-normal mb-0">Other Services</span>
+                            <span class="fs-5">0.00 €</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer border-top rounded-bottom-4 bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 fw-normal mb-0">Total Fare</span>
+                        <span class="h5 fw-normal mb-0">{{offerFlight[0].price.grandTotal}}  €</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-12">
+            <button type="button" class="btn rounded-pill btn-primary" style="margin:20px; width: 90%;" (click)="bookNow()">Book Now</button>
+        </div>
+    </div>
+</section>

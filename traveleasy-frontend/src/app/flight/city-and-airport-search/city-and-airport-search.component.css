@@ -1,0 +1,4 @@
+.resultSearch{
+    overflow-y: auto;
+    counter-reset: results;
+}

@@ -1,8 +1,9 @@
 import { FormGroup, FormControl} from '@angular/forms';
 import { Moment } from 'moment';
 import { moment } from './Const';
-import { MatDateRangePicker } from '@angular/material/datepicker';
+import { MatDateRangePicker, MatDatepicker } from '@angular/material/datepicker';
 import { Passenger } from './Passenger';
+import { IAirport } from '../model/IAirports';
 export class UtilityPassenger{
     passOption: {label:string; option: string} [] =[
         {label: 'Economy', option: 'ECONOMY'},
@@ -15,13 +16,14 @@ export class UtilityPassenger{
         children: 0,
         infants: 0
       }
-      str: string = ' traveller';
+      str: string = ' traveler';
     totalPassengers: number = 1;
     totalSeats: number = 1;    
       range: FormGroup = new FormGroup({
         start: new FormControl(moment()),
         end: new FormControl(moment())
       });
+      date = new FormControl(moment());
       setRange(start: Moment, end:Moment, picker: MatDateRangePicker<Moment>) {
         const s = this.range.value.start.value ?? moment();
         const e = this.range.value.end.value ?? moment();
@@ -31,6 +33,15 @@ export class UtilityPassenger{
         e.month(start.month());
         this.range.setValue({ s, e });
         picker.close();
+      }
+      setDate(date: Moment | null, picker: MatDatepicker<Moment>){
+        const d= this.date.value ?? moment();
+        if(date){
+          d.day(date.day());
+          d.month(date.month());
+          this.date.setValue(d);
+          picker.close();
+        }
       }
       passengerTypes: { label: string; type: keyof Passenger; description: string}[] = [
         { label: 'Adults', type: 'adult', description: '12 and older'},
@@ -65,10 +76,41 @@ export class UtilityPassenger{
         this.totalPassengers = this.passengers.adult + this.passengers.children + this.passengers.infants;
         this.totalSeats = this.passengers.adult + this.passengers.children;
         if(this.totalPassengers > 1){
-          this.str = ' travellers';
+          this.str = ' travelers';
         } else {
-          this.str = ' traveller';
+          this.str = ' traveler';
         }
       }
-      
+}
+export class UtilitySearch{
+  setQueryParams(origin: string, destination: string, start: string, end: string, option: string, adult: number, children: number, infants: number): any{
+    let queryParams: any = {
+      origin: origin,
+      destination: destination,
+      startDate: start,
+      option: option,
+      adult: adult
+    };
+    if(end){
+      queryParams.endDate = end;
+    }
+    if (children > 0) {
+      queryParams.children = children;
+    }
+    if (infants > 0) {
+      queryParams.infants = infants;
+    }
+    return queryParams;
+  }
+  //il metodo non funziona, cercherò di capirlo più tardi
+  /*setCitySelected(or: string, dest: string, orBol: boolean, destBol: boolean, item: IAirport){
+    if(orBol){
+      or = item.name + ' (' + item.iataCode + ')';
+      orBol= false;
+    } else if(destBol){
+      dest = item.name + ' (' + item.iataCode + ')';
+      destBol = false;
+    }
+  }*/
+
 }

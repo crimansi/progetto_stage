@@ -1,20 +1,27 @@
-import { Component} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common'; 
-import {MatDivider} from '@angular/material/divider';
-import { Router } from '@angular/router';
+import { IFlightSearch} from '../../model/IFlightSearch';;
 @Component({
   selector: 'app-flight-details',
   standalone: true,
-  imports: [MatButton, MatIcon, NgFor, NgIf, MatDivider],
+  imports: [MatButton, NgFor, NgIf],
   templateUrl: './flight-details.component.html',
   styleUrl: './flight-details.component.css'
 })
 export class FlightDetailsComponent {
-  showDet: boolean = false;
-  constructor(private router: Router){}
-  onCheckClick(){
-    this.router.navigate(['/travelDetails']);
+  @Input() price!: IFlightSearch[];
+  @Input() strBags!: string;
+  @Input() tax!: string;
+  //priceSubscription: Subscription
+  constructor(){
+    if(this.price){
+      console.log('entra1')
+      if(this.price.length > 0){
+        console.log('entra2')
+       
+      }
+    }
   }
+  
 }

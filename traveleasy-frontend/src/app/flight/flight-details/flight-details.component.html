@@ -1,84 +1,111 @@
-<div class="contDet">
-    <div class="outbound">
-        <h3>Outbound</h3>
-        <div class="cardDet">
-            <div class="block">
-                <span class="descriptionDet">NameAirline</span>
-            </div>
-            <div class="block">
-                <span class="descriptionDet">OraPartenza</span>
-                <span class="descriptionDet">Aereoporto</span>
-            </div>
-            <div class="blockDur">
-                <span class="description">Durata</span>
-                <span class="line"></span>
-                <span class="description">Diretto</span>
-            </div>
-            <div class="block">
-                <span class="descriptionDet">OraArrivo</span>
-                <span class="descriptionDet">Aereoporto</span>
-            </div>  
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Flight Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <h5>Seats</h5>
-        <div class="cardDet">
-            <div class="blockOr">
-                <span class="descriptionDet">Seat choice for a fee</span>
+        <div class="modal-body p-3">
+            <ng-container *ngIf="!price || price.length === 0">
+                <div class="text-center">
+                    <p>Loading flight details...</p>
+                </div>
+            </ng-container>
+            <ul class="nav nav-pills nav-justified nav-responsive bg-primary bg-opacity-10 rounded p-2 mb-3" id="flight-pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active mb-0" id="flight-info" data-bs-toggle="pill" data-bs-target="#flight-info-tab" type="button" role="tab" aria-controls="flight-info-tab" aria-selected="true">Flight Information</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link mb-0" id="flight-fare" data-bs-toggle="pill" data-bs-target="#flight-fare-tab" type="button" role="tab" aria-controls="flight-fare-tab" aria-selected="false" tabindex="-1">Fare Detail</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link mb-0" id="flight-baggage" data-bs-toggle="pill" data-bs-target="#flight-baggage-tab" type="button" role="tab" aria-controls="flight-baggage-tab" aria-selected="false" tabindex="-1">Baggage Rules</button>
+                </li>
+            </ul>
+            <div class="tab-content mb-0" id="flight-pills-tabContent">
+                <div class="tab-pane fade show active" id="flight-info-tab" role="tabpanel" aria-labelledby="flight-info">
+                  <div *ngIf="price && price.length > 0" style="width: 100%; height: 100%;">
+                    <div class="card border rounded-4" *ngFor="let it of price[0].itineraries">
+                        <div class="card-header rounded-top-4">
+                            <div class="d-sm-flex justify-content-sm-between align-items-center">
+                                <h6 class="fw-normal mb-0">{{it.segments[0].carrierCode}}</h6>
+                                <h6 class="fw-normal mb-0">
+                                    <span class="text-body">Travel Class:</span>
+                                        {{price[0].travelerPricings[0].fareDetailsBySegment[0].cabin}}
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div *ngFor="let stop of it.segments; let i = index">
+                                <div class="row g-4">
+                                    <div class="col-sm-2 d-flex flex-column justify-content-end">
+                                        <h4 class="text-end">{{stop.departure.iataCode}}</h4>
+                                        <h6 class="mb-0 text-end">{{stop.departure.at.slice(11, 16)}}</h6>
+                                    </div>
+                                    <div class="col-sm-8 my-sm-auto text-center">
+                                        <h5>{{stop.duration.slice(2, stop.duration.length).toLowerCase()}}</h5>
+                                        <div class="position-relative my-4">
+                                            <hr class="bg-primary opacity-5 position-relative">
+                                            <div class="icon-airplane bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle">
+                                                <span style="display: inline-block; transform: rotate(90deg);">
+                                                    <i class="bi bi-airplane-fill"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <h4>{{stop.arrival.iataCode}}</h4>
+                                        <h6 class="mb-0">{{stop.arrival.at.slice(11, 16)}}</h6>
+                                    </div>
+                                </div>
+                                <div class="bg-light text-center fw-normal rounded-2 mt-3 mb-4 p-2" *ngIf="i !== it.segments.length - 1">
+                                    Change of plane
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="flight-fare-tab" role="tabpanel" aria-labelledby="flight-fare">
+                    <div class="card rounded-4 card-body">
+                        <div class="table-responsive-lg">
+                            <table class="table caption-bottom mb-0">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th scope="col" class="border-0 rounded-start">Base Fare</th>
+                                        <th scope="col" class="border-0">Taxes and Fees</th>
+                                        <th scope="col" class="border-0 rounded-end">Total Fees</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  *ngIf="price && price.length > 0">
+                                        <td>{{price[0].price.base}} €</td>
+                                        <td>{{tax}} €</td>
+                                        <td><h5 class="mb-0">{{price[0].price.grandTotal}} €</h5></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="flight-baggage-tab" role="tabpanel" aria-labelledby="flight-baggage">
+                    <div class="card border rounded-4">
+                        <ng-container *ngIf="price && price.length > 0 && price[0].travelerPricings[0].fareDetailsBySegment[0].includedCheckedBags && price[0].travelerPricings[0].fareDetailsBySegment[0].includedCheckedBags.quantity > 0; else noBags">
+                            <p>
+                                <i class="bi bi-check"></i>
+                              {{price[0].travelerPricings[0].fareDetailsBySegment[0].includedCheckedBags.quantity}} checked {{strBags}} included
+                            </p>
+                        </ng-container>
+                        <ng-template #noBags>
+                            <p>
+                                <i class="bi bi-x"></i>
+                                No checked bags included
+                            </p>
+                          </ng-template>
+                        <button mat-button color="accent" disabled="true">Add bags</button>
+                        <span class="descrButton">Service unavailable for the moment</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="return">
-        <h3>Return</h3>
-        <div class="cardDet">
-            <div class="block">
-                <span class="descriptionDet">NameAirline</span>
-            </div>
-            <div class="block">
-                <span class="descriptionDet">OraPartenza</span>
-                <span class="descriptionDet">Aereoporto</span>
-            </div>
-            <div class="blockDur">
-                <span class="description">Durata</span>
-                <span class="line"></span>
-                <span class="description">Diretto</span>
-            </div>
-            <div class="block">
-                <span class="descriptionDet">OraArrivo</span>
-                <span class="descriptionDet">Aereoporto</span>
-            </div>  
-        </div>
-        <h5>Bags</h5>
-        <div class="cardDet">
-            <div class="blockOr">
-                <span class="descriptionDet">Hand baggage has included</span>
-                <button mat-button color="accent">Add bags</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="contPrice">
-    <div class="price">
-        <h3>Price</h3>
-        <div class="cardPrice">
-            <div class="sP">
-                <span>Fare</span>
-                <span>Prezzo</span>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="sP">
-                <span>Tax</span>
-                <span>Prezzo</span>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="sP">
-                <span>Other Charges</span>
-                <span>Prezzo</span>
-            </div>
-            <mat-divider></mat-divider>
-            <div class="sP">
-                <span><b>Total Fare</b></span>
-                <span><b>Prezzo</b></span>
-            </div>
-        </div>
-        <button  mat-flat-button color="accent" class="checkOut" (click)="onCheckClick()">Check out</button>
-</div>
 </div>

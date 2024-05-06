@@ -1,28 +1,12 @@
-<div class="c">
-<div class="card">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon>flight</mat-icon>
-                Flights
-            </ng-template>
+<section class="py-0">
+    <div class="container">
+        <div class="rounded-4 p-3 p-sm-5" style="background-image: url('assets/images/imageAirplane.jpg'); background-position: center center; background-repeat: no-repeat; background-size: cover;">
+            <div class="row">
+                <div class="col-md-10 mx-auto text-center">
+                    <h1 class="text-dark display-3 pt-sm-5 my-5">Ready to take of?</h1>
+                </div>
+            </div>
             <app-flightsearch></app-flightsearch>
-        </mat-tab>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon>hotel</mat-icon>
-                Hotel
-                </ng-template>
-                <app-hotelsearch></app-hotelsearch>
-        </mat-tab>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon>place</mat-icon>
-                Things to do
-            </ng-template>
-            <app-citysearch></app-citysearch>
-        </mat-tab>
-      </mat-tab-group>
-</div>
-
-</div>
+        </div>
+    </div>
+</section>

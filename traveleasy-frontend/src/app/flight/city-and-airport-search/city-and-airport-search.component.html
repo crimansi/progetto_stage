@@ -1,12 +1,12 @@
-<mat-form-field class="searchBar">
-    <mat-icon matPrefix>search</mat-icon>
-    <input matInput [formControl]="searchControl" placeholder="Search a City or Airport">
-</mat-form-field>
-<div>
-    <mat-list *ngIf="results$ | async as results">
-        <mat-list-item *ngFor="let result for results" (click)="onSelect(result)">
-            <span matListItemTitle>{{result.name}}({{result.aitaCode}})</span>
-            <span matListItemLine>{{result.address.countryName}}</span>
-        </mat-list-item>
-    </mat-list>   
+<div class="d-flex form-control rounded-pill" style="margin: 10px; max-width: 420px;">
+    <i class="bi bi-search"></i>
+    <input type="text" [(ngModel)]="cityOrAirport"(keypress)="searchCityOrAirport()" placeholder="Search a City or Airport" style="border:none; width: 75%;">
+</div>
+<div class="resultSearch">
+    <div class="list-group rounded-4" style="margin: 10px;">
+        <button type="button" *ngFor="let result of results" class="list-group-item list-group-item-action" (click)="onSelect(result)">
+            <span class="descriptionDet"> {{result.name}}({{result.iataCode}})</span>
+            <span class="description">{{result.address.countryName}}</span>
+        </button>
+    </div> 
 </div>

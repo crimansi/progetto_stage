@@ -1,12 +1,5 @@
-.card {
-  margin-top: 60px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  border-radius: 15px;
-  background-color: #fffbfe;
-  max-width: 900px;
-}
-.c {
-  display: flex;
-  justify-content: center;
+.display-3 {
+    font-size: calc(1.625rem + 4.5vw);
+    font-weight: 700;
+    line-height: 1.25;
 }

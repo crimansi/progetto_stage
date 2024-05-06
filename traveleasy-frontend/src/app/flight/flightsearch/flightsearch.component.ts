@@ -1,85 +1,105 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatDateRangePicker, MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatIcon } from '@angular/material/icon';
+import { MatDateRangePicker, MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle, MatDatepicker, MatDatepickerInput } from '@angular/material/datepicker';
 import { NgIf, NgFor } from '@angular/common';
-import { MatIconButton, MatMiniFabButton, MatButton} from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
-import { MatFormField, MatPrefix, MatLabel } from '@angular/material/form-field';
 import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 import {OverlayModule} from '@angular/cdk/overlay';
 import { CityAndAirportSearchComponent } from '../city-and-airport-search/city-and-airport-search.component';
+import { UtilityPassenger, UtilitySearch } from '../../utils/Utility';
 import { IAirport } from '../../model/IAirports';
-import { AirportAndCitySearchService } from '../../service/airport-and-city-search.service';
+import { FlightSearchService } from '../../service/flight-search.service';
+import { IFlightSearch } from '../../model/IFlightSearch';
 import { Subscription } from 'rxjs';
-
-import { UtilityPassenger } from '../../utils/Utility';
-
+import { MatMiniFabButton, MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-flightsearch',
   standalone: true,
-  imports: [MatIcon, ReactiveFormsModule, FormsModule,  MatDateRangePicker, MatDateRangeInput, MatStartDate,
-    MatEndDate, MatDatepickerToggle, NgIf, NgFor, MatIconButton, MatMiniFabButton, MatButton, MatInput,
-    MatFormField, MatPrefix, MatLabel, MatChipListbox, MatChipOption, OverlayModule, CityAndAirportSearchComponent],
+  imports: [ReactiveFormsModule, FormsModule,  MatDateRangePicker, MatDateRangeInput, MatStartDate,
+    MatEndDate, MatDatepickerToggle, NgIf, NgFor, MatInput, MatChipListbox, MatChipOption, OverlayModule, 
+    CityAndAirportSearchComponent, MatDatepicker, MatDatepickerInput, MatIcon, MatMiniFabButton, MatButton],
   templateUrl: './flightsearch.component.html',
   styleUrl: './flightsearch.component.css'
 })
+
 export class FlightsearchComponent implements OnDestroy{
   origin: string = '';
   destination: string = '';
   showSearchFrom: boolean = false;
   showSearchTo: boolean = false;
   showTrav: boolean = false;
-  private citySubscription: Subscription;
+  showOp: boolean = false;
   u = new UtilityPassenger();
+  uSearch = new UtilitySearch();
   selectedOption = this.u.passOption[0];
+  results: IFlightSearch[] = [];
+  orIataCode: string = '';
+  destIataCode: string = '';
+  flightSubscription: Subscription;
+  formSubmitted: boolean = false;
+  constructor(private router: Router, private flightService: FlightSearchService){
+    this.flightSubscription = new Subscription;
+  }
 
-  constructor(cityAndAirportService: AirportAndCitySearchService, private router: Router){
-    this.citySubscription = cityAndAirportService.selected$.subscribe((city: IAirport) => {
-      if(this.showSearchFrom){
-        origin = city.name + ' (' + city.iataCode + '), ' + city.address.countryName;
-        this.showSearchFrom = false;
-      } else if(this.showSearchTo){
-        this.destination = city.name + ' (' + city.iataCode + '), ' + city.address.countryName;
-        this.showSearchTo = false;
-      }
-    })
-  }
-  ngOnDestroy(): void {
-    if (this.citySubscription) {
-      this.citySubscription.unsubscribe();
-    }
-  }
-  
-  @ViewChild('rangeInput') rangeInput!: MatDateRangePicker<Date>;
-  
-  openPicker(): void {
-    this.rangeInput.open();
-  }
+
   swapInput(){
     const temp = this.origin;
     this.origin = this.destination;
     this.destination = temp;
+    const tempCode = this.orIataCode;
+    this.orIataCode = this.destIataCode;
+    this.destIataCode = tempCode;
   }
   
-  searchFlight(){
-    let queryParams: any = {
-      origin: this.origin,
-      destination: this.destination,
-      startDate: this.u.range.value.start.format('YYYY-MM-DD'),
-      endDate: this.u.range.value.end.format('YYYY-MM-DD'),
-      option: this.selectedOption.option,
-      adult: this.u.passengers.adult
-    };
-    if (this.u.passengers.children > 0) {
-      queryParams.children = this.u.passengers.children;
+  searchFlightRoundTrip(){
+    this.formSubmitted = true;
+    if (this.origin && this.destination && this.u.range.valid && this.u.totalPassengers > 0 && this.selectedOption){
+          let queryParams = this.uSearch.setQueryParams(this.origin, this.destination, this.u.range.value.start.format('YYYY-MM-DD'), 
+        this.u.range.value.end.format('YYYY-MM-DD'), this.selectedOption.option, this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants);
+    this.flightSubscription = this.flightService.getFlights(this.orIataCode, this.destIataCode, this.u.range.value.start.format('YYYY-MM-DD'), this.u.range.value.end.format('YYYY-MM-DD'),
+      this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants,  this.selectedOption.option, false).subscribe(
+      data => {
+        this.results = data;
+        sessionStorage.setItem('results', JSON.stringify(this.results));
+        this.router.navigate(['/flightSearch'],{queryParams});
     }
-    if (this.u.passengers.infants > 0) {
-      queryParams.infants = this.u.passengers.infants;
-    }
-    this.router.navigate(['/flightSearch'], { queryParams });
+    );
+        }
     
+  }
+ /* searchFlightOneWay(){
+    if(this.u.date.value){
+      let queryParams = this.uSearch.setQueryParams(this.origin, this.destination, this.u.date.value.format('YYYY-MM-DD'), '', 
+         this.selectedOption.option, this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants)
+         this.flightSubscription = this.flightService.getFlights(this.orIataCode, this.destIataCode,this.u.date.value.format('YYYY-MM-DD'), '',
+         this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants,  this.selectedOption.option, false).subscribe(
+           data => {
+             this.results = data;
+             this.flightService.setResults(this.results);
+             sessionStorage.setItem('results', JSON.stringify(this.results));
+             this.router.navigate(['/flightSearch'],{queryParams});
+         }
+         );
+  }
+  }*/
+  ngOnDestroy(): void {
+      if(this.flightSubscription){
+        this.flightSubscription.unsubscribe();
+      }
+  }
+
+  receiveData(city: IAirport): void {
+    if(this.showSearchFrom){
+      this.origin = city.name + ' (' + city.iataCode + ')';
+      this.orIataCode = city.iataCode;
+      this.showSearchFrom = false;
+    } else if(this.showSearchTo){
+      this.destination = city.name + ' (' + city.iataCode + ')';
+      this.destIataCode = city.iataCode;
+      this.showSearchTo = false;
+    }
   }
 }

@@ -4,6 +4,8 @@ import { FlightSearchResultComponent } from './flight/flight-search-result/fligh
 import { FlightDetailsComponent } from './flight/flight-details/flight-details.component';
 import { TravelsDetailsComponent } from './flight/travels-details/travels-details.component';
 import { SearchComponent } from './search/search.component';
+import { LoginComponent } from './authentication/login/login.component';
+import { SignupComponent } from './authentication/signup/signup.component';
 
 export const routes: Routes = [
     {path: 'Flight', component: FlightsearchComponent},
@@ -11,5 +13,7 @@ export const routes: Routes = [
     {path:'search', component: SearchComponent},
     {path:'flightSearch', component: FlightSearchResultComponent},
     {path: 'flightDetails', component: FlightDetailsComponent},
-    {path: 'travelDetails', component: TravelsDetailsComponent}
+    {path: 'travelDetails', component: TravelsDetailsComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'signUp', component: SignupComponent}
 ];

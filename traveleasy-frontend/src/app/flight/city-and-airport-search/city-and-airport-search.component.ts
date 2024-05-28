@@ -14,29 +14,32 @@ import { Subscription } from 'rxjs';
 })
 export class CityAndAirportSearchComponent implements OnDestroy{
   cityOrAirport: string = '';
+  errorString: string = '';
   results: IAirport[] = [];
-  @Output() citySelected= new EventEmitter<IAirport>;
   searchControl = new FormControl;
   private citySubscription: Subscription;
+  @Output() citySelected= new EventEmitter<IAirport>;
 
   constructor(private cityAndAirportService: AirportAndCitySearchService){
     this.citySubscription = new Subscription;
   }
-
   searchCityOrAirport(){
     if(this.cityOrAirport.length >= 3){
       this.citySubscription = this.cityAndAirportService.getAirports(this.cityOrAirport).subscribe(
         data => {
           this.results = data;
-      }
+          if(this.results.length == 0)
+            this.errorString = 'Sorry, no cities or airports were found. Please try again.';
+        },
+        error => {
+          this.errorString = 'Sorry, no cities or airports were found. Please try again.';
+        }
       );
     }
   }
-
   onSelect(city: IAirport): void{
     this.citySelected.emit(city);
   }
-
  ngOnDestroy(): void {
   if (this.citySubscription) {
     this.citySubscription.unsubscribe();

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ITravelersResponse } from '../model/ITravelers';
 import { IPriceFlight } from '../model/IPriceFlight';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { IBookingFlight } from '../model/IBooking';
 
 @Injectable({
@@ -17,6 +17,11 @@ export class BookFlightService {
       flightPrice: flightPrice,
       travelers: travelers
     };
-    return this.http.post<IBookingFlight>(this.baseUrl, request);
+    return this.http.post<IBookingFlight>(this.baseUrl, request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.log(error);
+        throw Error(error.message);
+      })
+    );
   }
 }

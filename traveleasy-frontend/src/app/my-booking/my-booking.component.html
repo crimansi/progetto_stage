@@ -1,0 +1,108 @@
+<section class="pt-0">
+    <div class="container">
+      <div class="row d-flex flex-column align-items-center">
+        <div class="col-lg-8 col-xl-9">
+          <div class="vstack gap-4">
+            <h1 class="display-4 mb-0" style="margin:20px">
+                <i class="bi bi-airplane-fill"></i> My Bookings
+            </h1>
+            <div class="d-flex justify-content-sm-between align-items-center">
+                <form class="costum-date border rounded-pill" style="height: 40px; width: 200px; padding-left: 10px; padding-right: 10px; padding-top:7px;">
+                    <mat-select [(ngModel)] ='selectedRange' name="range" placeholder="Select range" (selectionChange)="applyRangeAndSort(selectedRange.range, showAsc)">
+                      @for (range of ranges; track range){
+                        <mat-option [value]="range">{{range.view}}</mat-option>
+                      }
+                    </mat-select>
+                </form>
+                <button class="btn text-primary rounded-circle border-0 text-end" style="font-size: 25px;" (click)="showAsc = !showAsc; applyRangeAndSort(selectedRange.range, showAsc)">
+                    <i [ngClass]="{'bi bi-sort-up': !showAsc, 'bi bi-sort-down': showAsc}"></i>
+                </button>
+            </div>
+            <div class="card border rounded-4" *ngFor="let booking of bookings" style="margin-bottom: 10px;">
+                <div class="card-header bg-body border-bottom d-md-flex justify-content-md-between align-items-center rounded-top-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon bg-body-secondary text-secondary rounded-circle">
+                            <span style="display: inline-block; transform: rotate(90deg);">
+                                <i class="bi bi-airplane-fill"></i>
+                            </span>
+                        </div>
+                        <div style="margin-left:5px;">
+                            <h6 class="card-title">
+                                {{booking.booking.flight.cityDeparture}} to {{booking.booking.flight.cityArrival}}
+                                <span *ngIf="booking.booking.flight.cityDepartureReturn && booking.booking.flight.cityArrivalReturn">
+                                    and {{booking.booking.flight.cityDepartureReturn}} to {{booking.booking.flight.cityArrivalReturn}}
+                                </span>
+                            </h6>
+                            <div class="small d-flex">
+                                <span class="text-secondary">Booking ID: {{booking.booking.bookingId}}</span>
+                                <li class="text-secondary" style="margin-left: 8px;"> {{booking.booking.flight.travelClass}} class</li>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <h6 class="text-secondary">Booking Date:</h6>
+                        <h4>{{booking.date | date:'yyyy-MM-dd' }}</h4>
+                    </div>
+                </div>
+                <div class=" card-body p-4 pb-0">
+                    <div class="row g-3">
+                        <div class="col-sm-6 col-md-3">
+                            <div class="text-secondary small">
+                                Departure time:
+                            </div>
+                            <h6>{{booking.booking.flight.departureTime.slice(0, 10)}} {{booking.booking.flight.departureTime.slice(11, -3)}}</h6>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="text-secondary small">
+                                Arrival time:
+                            </div>
+                            <h6>{{booking.booking.flight.arrivalTime.slice(0, 10)}} {{booking.booking.flight.arrivalTime.slice(11, -3)}}</h6>
+                        </div>
+                        <div class="col-sm-6 col-md-3" *ngIf="booking.booking.flight.departureTimeReturn">
+                            <div class="text-secondary small">
+                                Departure time:
+                            </div>
+                            <h6>{{booking.booking.flight.departureTimeReturn.slice(0, 10)}} {{booking.booking.flight.departureTimeReturn.slice(11, -3)}}</h6>
+                        </div>
+                        <div class="col-sm-6 col-md-3" *ngIf="booking.booking.flight.arrivalTimeReturn">
+                            <div class="text-secondary small">
+                                Arrival time:
+                            </div>
+                            <h6>{{booking.booking.flight.arrivalTimeReturn.slice(0, 10)}} {{booking.booking.flight.arrivalTimeReturn.slice(11, -3)}}</h6>
+                        </div>
+                    </div>
+                    <mat-divider style="margin-bottom: 20px;"></mat-divider>
+                    <div class="row g-3" style="margin-bottom:5px;" *ngFor="let trav of booking.booking.travelers">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="text-secondary small">
+                                Full name:
+                            </div>
+                            <h6>{{trav.firstName}} {{trav.lastName}}</h6>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="text-secondary small">
+                                Date of birth:
+                            </div>
+                            <h6>{{trav.dateOfBirth}}</h6>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-secondary small">
+                                Gender:
+                            </div>
+                            <h6>{{trav.gender}}</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-end">
+                        <div class="text-end" style="margin:5px;">
+                            <button class="btn btn-danger rounded-circle" (click)="deleteBook(booking.id)">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

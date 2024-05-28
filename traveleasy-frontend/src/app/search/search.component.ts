@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FlightsearchComponent } from '../flight/flightsearch/flightsearch.component';
 
 
@@ -9,6 +9,6 @@ import { FlightsearchComponent } from '../flight/flightsearch/flightsearch.compo
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent {
+export class SearchComponent{
 }
 

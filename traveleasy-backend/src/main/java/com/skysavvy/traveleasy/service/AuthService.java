@@ -6,6 +6,7 @@ import com.skysavvy.traveleasy.model.user.User;
 import com.skysavvy.traveleasy.payload.request.LoginRequest;
 import com.skysavvy.traveleasy.payload.request.SignUpRequest;
 import com.skysavvy.traveleasy.payload.response.AuthResponse;
+import com.skysavvy.traveleasy.payload.response.MessageResponse;
 import com.skysavvy.traveleasy.repository.ConfirmTokenRepository;
 import com.skysavvy.traveleasy.repository.UserRepository;
 import com.skysavvy.traveleasy.security.jwt.JwtUtils;
@@ -31,9 +32,9 @@ public class AuthService {
 
     public ResponseEntity<?> signUp(SignUpRequest user) {
         if(userRepository.existsByUsername(user.getUsername())) {
-            return ResponseEntity.badRequest().body("Error: Username is already in use!");
+            return ResponseEntity.badRequest().body("Error: Username already exists");
         }if(userRepository.existsByEmail(user.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+            return ResponseEntity.badRequest().body("Error: Email already exists");
         }
         User newUser = new User();
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -43,6 +44,7 @@ public class AuthService {
         newUser.setLastName(user.getLastName());
         newUser.setRole(user.getRole());
         newUser.setEnabled(true);
+
         userRepository.save(newUser);
 
         ConfirmToken confirmToken = new ConfirmToken(newUser);
@@ -55,7 +57,8 @@ public class AuthService {
                 +"http://localhost:8085/confirm-account?token="+confirmToken.getConfirmationToken());
         emailService.sendEmail(mailMessage);
         System.out.println("Confirmation Token: " + confirmToken.getConfirmationToken());
-        return ResponseEntity.ok("Verify email by the link sent on your email address");
+
+        return ResponseEntity.ok(new MessageResponse("Verify email by the link sent on your email address"));
     }
 
     public ResponseEntity<?> login(LoginRequest loginRequest, Authentication auth) {
@@ -63,11 +66,10 @@ public class AuthService {
         CostumUserDetails userDetails = (CostumUserDetails) auth.getPrincipal();
         if(userRepository.findByUsername(userDetails.getUsername()).isPresent()) {
             User user = userRepository.findByUsername(userDetails.getUsername()).get();
-            return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName()));
+            return ResponseEntity.ok(new AuthResponse(token, user.getId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName()));
         }
-        return ResponseEntity.badRequest().body("Error: Couldn't login");
+        return ResponseEntity.badRequest().body("Username or password is incorrect");
     }
-
 
     /*public ResponseEntity<?> confirmEmail(String confirmationToken) {
         ConfirmToken token = confirmTokenRepository.findByConfirmationToken(confirmationToken);

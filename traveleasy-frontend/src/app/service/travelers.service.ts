@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ITravelers, ITravelersResponse } from '../model/ITravelers';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +10,11 @@ export class TravelersService {
   constructor(private http: HttpClient) {}
 
   addTravelers(travelers: ITravelers[]): Observable<ITravelersResponse[]> {
-    return this.http.post<ITravelersResponse[]>(this.baseUrl, travelers);
+    return this.http.post<ITravelersResponse[]>(this.baseUrl, travelers).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.log(error);
+        throw Error(error.message);
+      })
+    );
   }
 }

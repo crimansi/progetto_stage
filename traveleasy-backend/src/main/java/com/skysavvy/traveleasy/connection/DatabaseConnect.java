@@ -1,6 +1,5 @@
 package com.skysavvy.traveleasy.connection;
 
-import com.amadeus.resources.FlightOrder;
 import com.amadeus.resources.FlightOrder.Traveler;
 import com.amadeus.resources.FlightOrder.Document.DocumentType;
 import com.amadeus.resources.FlightOrder.Phone.DeviceType;

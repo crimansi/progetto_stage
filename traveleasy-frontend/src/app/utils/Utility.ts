@@ -4,6 +4,10 @@ import { moment } from './Const';
 import { MatDateRangePicker, MatDatepicker } from '@angular/material/datepicker';
 import { Passenger } from './Passenger';
 import { IAirport } from '../model/IAirports';
+import { Subscription } from 'rxjs';
+import { FlightSearchService } from '../service/flight-search.service';
+import { IFlightSearch } from '../model/IFlightSearch';
+import { Router } from '@angular/router';
 export class UtilityPassenger{
     passOption: {label:string; option: string} [] =[
         {label: 'Economy', option: 'ECONOMY'},
@@ -83,34 +87,59 @@ export class UtilityPassenger{
       }
 }
 export class UtilitySearch{
-  setQueryParams(origin: string, destination: string, start: string, end: string, option: string, adult: number, children: number, infants: number): any{
-    let queryParams: any = {
-      origin: origin,
-      destination: destination,
-      startDate: start,
-      option: option,
-      adult: adult
-    };
-    if(end){
-      queryParams.endDate = end;
-    }
-    if (children > 0) {
-      queryParams.children = children;
-    }
-    if (infants > 0) {
-      queryParams.infants = infants;
-    }
-    return queryParams;
+  origin: string = '';
+  destination: string = '';
+  orIataCode: string = '';
+  destIataCode: string = '';
+  showSearchFrom: boolean = false;
+  showSearchTo: boolean = false;
+  showSearchFromOneWay: boolean = false;
+  showSearchToOneWay: boolean = false;
+
+
+  apiCall(sub: Subscription, service: FlightSearchService, dateStart: string, dateEnd: string, adult: number, children: number, infants: number, option: string,
+    results: IFlightSearch[], router: Router){
+      let queryParams: any = {
+        origin: this.origin,
+        destination: this.destination,
+        startDate: dateStart,
+        option: option,
+        adult: adult
+      };
+      if(dateEnd){
+        queryParams.endDate = dateEnd;
+      }
+      if (children > 0) {
+        queryParams.children = children;
+      }
+      if (infants > 0) {
+        queryParams.infants = infants;
+      }
+      sub = service.getFlights(this.orIataCode, this.destIataCode, dateStart, dateEnd, adult, children, infants, option, false).subscribe(
+        data => {
+          results = data;
+          sessionStorage.setItem('results', JSON.stringify(results));
+          router.navigate(['/flightSearch'],
+                {queryParams: queryParams}
+          );
+        },
+      error =>{
+        console.log(error);
+      });
   }
-  //il metodo non funziona, cercherò di capirlo più tardi
-  /*setCitySelected(or: string, dest: string, orBol: boolean, destBol: boolean, item: IAirport){
-    if(orBol){
-      or = item.name + ' (' + item.iataCode + ')';
-      orBol= false;
-    } else if(destBol){
-      dest = item.name + ' (' + item.iataCode + ')';
-      destBol = false;
+
+  receiveData(city: IAirport): void {
+    if(this.showSearchFrom || this.showSearchFromOneWay){
+      this.origin = city.name + ' (' + city.iataCode + ')';
+      this.orIataCode = city.iataCode;
+      this.showSearchFrom = false;
+      this.showSearchFromOneWay = false;
+    } else if(this.showSearchTo || this.showSearchToOneWay){
+      this.destination = city.name + ' (' + city.iataCode + ')';
+      this.destIataCode = city.iataCode;
+      this.showSearchTo = false;
+      this.showSearchToOneWay = false;
     }
-  }*/
+  }
 
 }

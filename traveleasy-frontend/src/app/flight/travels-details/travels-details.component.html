@@ -12,6 +12,9 @@
             <h1 class="display-4 mb-0" style="margin:20px">
                 <i class="bi bi-person-fill"></i> Traveler Details
             </h1>
+            <div *ngIf="formSubmit && error.length > 0" class="alert alert-danger rounded-4" role="alert"  style="margin-left: 20px; margin-right:20px; margin-bottom: 20px;">
+                {{this.error}}
+            </div>
             <div class="card rounded-4" *ngFor="let trav of offerFlight[0].travelerPricings; let i = index" style="margin-left: 20px; margin-right:20px; margin-bottom: 20px;">
                 <div class="card-header border-bottom px-4 rounded-top-4">
                     <h3 class="card-title mb-0">{{trav.travelerId}} Passenger</h3>
@@ -19,17 +22,19 @@
                 <div class="card-body py-4">
                     <div class="row g-4">
                         <div class="col-md-9">
-                            <label class="form-label">Full Name</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control rounded-start-pill" placeholder="First Name" [(ngModel)]="travelers[i].name.firstName" name="firstName">
-                                <input type="text" class="form-control rounded-end-pill" placeholder="Last Name" [(ngModel)]="travelers[i].name.lastName" name="lastName">
+                            <label class="form-label">Enter full Name</label>
+                            <div class="input-group" (click)="formSubmit = false">
+                                <input type="text" class="form-control rounded-start-pill" placeholder="First Name" [(ngModel)]="travelers[i].name.firstName" name="firstName"
+                                [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                <input type="text" class="form-control rounded-end-pill" placeholder="Last Name" [(ngModel)]="travelers[i].name.lastName" name="lastName"
+                                [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Date of Birth</label>
+                            <label class="form-label">Enter date of birth</label>
                             <form class="row row-cols-sm-auto">
                                 <div class="col-12">
-                                    <div class="form-control rounded-pill d-flex align-items-center" style="height: 40px;">
+                                    <div class="form-control rounded-pill d-flex align-items-center" style="height: 40px;" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
                                         <input class="" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" style="border:none;"
                                         [minDate]="{year: 1950, month: 1, day: 1}" [maxDate]="{year: 2024, month: 12, day: 31}" [(ngModel)]="dateOfBirthNonFormat[i]"
                                         name="dateOfBirth"/>
@@ -39,8 +44,8 @@
                             </form>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">Gender</label>
-                            <form class="rounded-pill form-control">
+                            <label class="form-label">Enter gender</label>
+                            <form class="rounded-pill form-control" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
                             <mat-select placeholder="Gender" [(ngModel)]="travelers[i].gender" name="gender">
                                 @for(gender of genders; track gender){
                                     <mat-option [value]="gender">{{gender}}</mat-option>
@@ -123,6 +128,12 @@
         </div>
         <div class="col-md-6 col-xl-12">
             <button type="button" class="btn rounded-pill btn-primary" style="margin:20px; width: 90%;" (click)="bookNow()">Book Now</button>
+        </div>
+        <div class="col-md-6 col-xl-12" *ngIf="showAlert">
+            <div class="alert alert-warning" role="alert">
+                <h1>Attention!</h1>
+                <p>You must be authenticated to book.</p>
+            </div>
         </div>
     </div>
 </section>

@@ -13,15 +13,5 @@ export class FlightDetailsComponent {
   @Input() price!: IFlightSearch[];
   @Input() strBags!: string;
   @Input() tax!: string;
-  //priceSubscription: Subscription
-  constructor(){
-    if(this.price){
-      console.log('entra1')
-      if(this.price.length > 0){
-        console.log('entra2')
-       
-      }
-    }
-  }
-  
+  @Input() errorString!: string;
 }

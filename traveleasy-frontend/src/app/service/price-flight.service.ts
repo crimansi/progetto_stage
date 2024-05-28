@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
-import { BehaviorSubject, Observable, map} from 'rxjs';
+import { HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, map} from 'rxjs';
 import { IFlightSearch } from '../model/IFlightSearch';
 import { IPriceFlight } from '../model/IPriceFlight';
 @Injectable({
@@ -11,6 +11,10 @@ export class PriceFlightService {
   constructor(private http: HttpClient) { }
 
   getPriceFlight(offer: IFlightSearch): Observable <IPriceFlight>{
-    return this.http.post<IPriceFlight>(this.baseUrl, offer);
+    return this.http.post<IPriceFlight>(this.baseUrl, offer).pipe(
+      catchError((error: HttpErrorResponse) => {
+        throw Error(error.message);
+      })
+    );
   }
 }

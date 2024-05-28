@@ -1,4 +1,4 @@
-<div class="d-flex form-control rounded-pill" style="margin: 10px; max-width: 420px;">
+<div class="d-flex form-control rounded-pill" style="margin: 10px; width:93%;">
     <i class="bi bi-search"></i>
     <input type="text" [(ngModel)]="cityOrAirport"(keypress)="searchCityOrAirport()" placeholder="Search a City or Airport" style="border:none; width: 75%;">
 </div>
@@ -9,4 +9,8 @@
             <span class="description">{{result.address.countryName}}</span>
         </button>
     </div> 
+    <ng-container *ngIf="results.length == 0 && errorString.length > 0">
+        <div class="alert alert-light text-center rounded-4" role="alert" style="width:250px; margin:20px;">
+            <i class="bi bi-info-circle"></i> {{errorString}}</div>
+    </ng-container>
 </div>

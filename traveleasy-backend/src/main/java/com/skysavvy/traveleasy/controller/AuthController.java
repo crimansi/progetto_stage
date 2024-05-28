@@ -2,7 +2,7 @@ package com.skysavvy.traveleasy.controller;
 
 import com.skysavvy.traveleasy.payload.request.LoginRequest;
 import com.skysavvy.traveleasy.payload.request.SignUpRequest;
-import com.skysavvy.traveleasy.service.AuthService;
+import com.skysavvy.traveleasy.database.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

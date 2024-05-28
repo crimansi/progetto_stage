@@ -33,7 +33,6 @@ public class SignUpRequest {
     @StrongPassword
     private String password;
     private String confirmPassword;
-    private boolean enabled;
     private Role role = Role.USER;
 
 }

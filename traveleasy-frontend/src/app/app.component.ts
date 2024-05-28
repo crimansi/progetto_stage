@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { ToolBarComponent } from './tool-bar/tool-bar.component';
 import { SearchComponent } from './search/search.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
+declare var bootstrap: any;
+
 
 @Component({
   selector: 'app-root',
@@ -13,4 +15,6 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 })
 export class AppComponent {
   title = 'TravelEasy';
+
+  isAuth = true;
 }

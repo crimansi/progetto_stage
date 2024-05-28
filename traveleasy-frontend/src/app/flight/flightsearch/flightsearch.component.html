@@ -1,50 +1,50 @@
 
-<div class="card">
+<div class="card rounded-4">
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-6">
-                <ul class="nav nav-pills nav-pills-primary-soft mb-3" id="tour-pills-tab" role="tablist" style="margin-top:5px;">
-                    <li class="nav-item me-2">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#tab-roundTrip">Round Trip</a>
+                <ul class="nav nav-pills" id="tour-pills-tab" role="tablist" style="margin-top:5px; margin-bottom: 20px;">
+                    <li class="nav-item">
+                        <a class="nav-link rounded-start-4 rounded-end-0 active" data-bs-toggle="tab" href="#tab-roundTrip" (click)="uSearch.showSearchFromOneWay = false; uSearch.showSearchToOneWay = false">Round Trip</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" data-bs-toggle="tab" href="#tab-oneWay">One Way</a>
+                        <a class="nav-link rounded-start-0 rounded-end-4" data-bs-toggle="tab" href="#tab-oneWay" (click)="uSearch.showSearchFrom = false; uSearch.showSearchTo = false">One Way</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="tab-content">
             <div class="tab-pane show active" id="tab-roundTrip">
-                <div class="row g-4 needs-validation" novalidate>
+                <div class="row g-4">
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-geo-alt"></i> From</label>
-                            <input type="text" class="form-control rounded-pill" [(ngModel)]="origin" placeholder="From" aria-label="From" (click)="showSearchFrom = !showSearchFrom; showSearchTo = false" 
-                            cdkOverlayOrigin #triggerFrom="cdkOverlayOrigin" required>
-                            <div class="invalid-feedback" *ngIf="!origin && formSubmitted">
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-geo-alt"></i> From</label>
+                            <input type="text" class="form-control rounded-pill" [(ngModel)]="uSearch.origin" placeholder="From" aria-label="From" (click)="uSearch.showSearchFrom = !uSearch.showSearchFrom; uSearch.showSearchTo = false" 
+                                    cdkOverlayOrigin #triggerFrom="cdkOverlayOrigin" [ngClass]="{'is-invalid': formSubmitted && !uSearch.origin}" [readOnly]="uSearch.showSearchFrom">
+                            <div class="error" *ngIf="formSubmitted && !uSearch.origin">
                                 Please provide a valid city.
-                              </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-auto mt-3 mt-md-0 d-flex align-items-center button-swap">
-                        <button class="btn btn-arrow btn-white btn-round mb-0 text-primary" (click)="swapInput()">
+                    <div class="col-md-auto d-flex align-items-center button-swap">
+                        <button class="btn border-0 btn-arrow btn-white btn-round text-primary" (click)="swapInput()">
                             <i class="bi bi-arrow-left-right"></i>
                         </button>
                     </div>
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                        <div class="bg-light rounded-4 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-send"></i> To</label>
-                            <input type="text" class="form-control rounded-pill" [(ngModel)]="destination" placeholder="To" aria-label="To" (click)="showSearchTo = !showSearchTo; showSearchFrom = false" 
-                            cdkOverlayOrigin #triggerTo="cdkOverlayOrigin" required>
-                            <div class="invalid-feedback" *ngIf="!destination && formSubmitted">
+                            <input type="text" class="form-control rounded-pill" [(ngModel)]="uSearch.destination" placeholder="To" aria-label="To" (click)="uSearch.showSearchTo = !uSearch.showSearchTo; uSearch.showSearchFrom = false" 
+                            cdkOverlayOrigin #triggerTo="cdkOverlayOrigin" required [ngClass]="{'is-invalid': formSubmitted && !uSearch.destination}" [readOnly]="uSearch.showSearchTo">
+                            <div class="error" *ngIf="formSubmitted && !uSearch.destination">
                                 Please provide a valid city.
                               </div>
                         </div> 
                     </div>
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-calendar-event"></i> Date</label>
-                            <form class="form-control rounded-pill" (click)="picker.open()" style="display: flex; align-items: center; height: 40px;">
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-calendar-event"></i> Date</label>
+                            <form class="costum-date rounded-pill d-flex align-items-center justify-content-sm-between border" (click)="picker.open()" style="height: 40px; padding-left: 10px;" [ngClass]="{'border-danger': (!u.range.valid || !u.range.value.start.isSameOrAfter(currentDate)) && formSubmitted}">
                                 <mat-date-range-input [rangePicker]="picker" [formGroup]="u.range">
                                     <input matStartDate placeholder="Start date" formControlName="start" required>
                                     <input matEndDate placeholder="End date"  formControlName="end" required>
@@ -53,91 +53,106 @@
                                 <mat-date-range-picker #picker startView="month"
                                         (daySelected)="u.setRange(u.range.value.start, u.range.value.end, picker)"></mat-date-range-picker>
                             </form>
-                            <div class="invalid-feedback" *ngIf="!u.range.valid && formSubmitted">
+                            <div class="error" *ngIf="(!u.range.valid || !u.range.value.start.isSameOrAfter(currentDate)) && formSubmitted">
                                 Please provide a valid range date.
-                              </div>
+                            </div>
                         </div> 
                     </div>
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-person"></i> Travelers</label>
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-person"></i> Travelers</label>
                             <input type="text" class="form-control rounded-pill" placeholder="Travelers" aria-label="Travelers" 
-                            [value]="u.totalPassengers+ u.str" cdkOverlayOrigin #trig="cdkOverlayOrigin" (click)="showTrav = !showTrav" required>
-                            <div class="invalid-feedback" *ngIf="u.totalPassengers <= 0 && formSubmitted">
+                            [value]="u.totalPassengers+ u.str" cdkOverlayOrigin #trig="cdkOverlayOrigin" (click)="showTrav = !showTrav" required [ngClass]="{'is-invalid': formSubmitted && u.totalPassengers <= 0}">
+                            <div class="error" *ngIf="formSubmitted && u.totalPassengers <= 0">
                                 Please provide a valid number of travelers.
-                              </div>
+                            </div>
                         </div> 
                     </div>
                     <div class="col-md-6 col-xl-6">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-suitcase"></i> Travel class</label>
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-suitcase"></i> Travel class</label>
                             <mat-chip-listbox>
                                 <mat-chip-option *ngFor="let option of u.passOption" [selected]="option.label === selectedOption.label" color="accent"
                                     (click)="selectedOption = option">{{ option.label }}</mat-chip-option>
                             </mat-chip-listbox> 
-                            <div class="invalid-feedback" *ngIf="!selectedOption && formSubmitted">
+                            <div class="error" *ngIf="formSubmitted && !selectedOption">
                                 Please provide a valid travel class.
                             </div>
                         </div> 
                     </div>
-                    <div class="col-12 text-end pt-0">
-                        <button class="btn btn-primary mb-n4 rounded-pill" (click)="searchFlightRoundTrip()" style="margin-bottom: 5px;"> Search</button>
+                    <div class="col-12 text-end">
+                        <button class="btn btn-primary rounded-pill" (click)="searchFlightRoundTrip()" style="margin-bottom: 5px;"> Search</button>
                     </div>
                 </div>
             </div>
-           <!--<div class="tab-pane" id="tab-oneWay">
+           <div class="tab-pane" id="tab-oneWay">
                 <div class="row g-4">
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-geo-alt"></i> From</label>
-                            <input type="text" class="form-control rounded-4" [(ngModel)]="origin" placeholder="From" aria-label="From" (click)="showSearchFrom = !showSearchFrom; showSearchTo = false" 
-                            cdkOverlayOrigin #triggerFrom="cdkOverlayOrigin">
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-geo-alt"></i> From</label>
+                            <input type="text" class="form-control rounded-4" [(ngModel)]="uSearch.origin" placeholder="From" aria-label="From" (click)="uSearch.showSearchFromOneWay = !uSearch.showSearchFromOneWay; uSearch.showSearchToOneWay = false" 
+                            cdkOverlayOrigin #triggerFromOneWay="cdkOverlayOrigin" [ngClass]="{'is-invalid': formSubmittedOneWay && !uSearch.origin}" [readOnly]="uSearch.showSearchFromOneWay">
+                            <div class="error" *ngIf="formSubmittedOneWay && !uSearch.origin">
+                                Please provide a valid city.
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-auto mt-3 mt-md-0 d-flex align-items-center button-swap">
-                        <button class="btn btn-white btn-round mb-0 text-primary" (click)="swapInput()">
+                        <button class="btn btn-white btn-round text-primary" (click)="swapInput()">
                             <i class="bi bi-arrow-left-right"></i>
                         </button>
                     </div>
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-send"></i> To</label>
-                            <input type="text" class="form-control rounded-4" [(ngModel)]="destination" placeholder="To" aria-label="To" (click)="showSearchTo = !showSearchTo; showSearchFrom = false" 
-                            cdkOverlayOrigin #triggerTo="cdkOverlayOrigin">
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-send"></i> To</label>
+                            <input type="text" class="form-control rounded-4" [(ngModel)]="uSearch.destination" placeholder="To" aria-label="To" (click)="uSearch.showSearchToOneWay = !uSearch.showSearchToOneWay; uSearch.showSearchFromOneWay = false" 
+                            cdkOverlayOrigin #triggerToOneWay="cdkOverlayOrigin" [ngClass]="{'is-invalid': formSubmittedOneWay && !uSearch.destination}" [readOnly]="uSearch.showSearchToOneWay">
+                            <div class="error" *ngIf="formSubmittedOneWay && !uSearch.destination">
+                                Please provide a valid city.
+                            </div>
                         </div> 
                     </div>
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                            <label class="mb-1"><i class="bi bi-calendar-event"></i> Date</label>
-                            <form class="form-control rounded-4" (click)="pick.open()" style="display: flex; align-items: center; height: 40px;">
+                        <div class="bg-light rounded-4 h-100 p-3">
+                            <label><i class="bi bi-calendar-event"></i> Date</label>
+                            <form class="border rounded-pill d-flex align-items-center justify-content-sm-between costum-date" (click)="pick.open()" style="height: 40px; padding-left: 10px;" [ngClass]="{'border-danger': (!u.date.valid || !u.date.value?.isSameOrAfter(currentDate)) && formSubmittedOneWay}">
                                 <input matInput [matDatepicker]="pick" [formControl]="u.date" style="border:none; width: 75%;">
                                 <mat-datepicker-toggle matPrefix [for]="pick"></mat-datepicker-toggle>
                                 <mat-datepicker #pick startView="month"
                                         (daySelected)="u.setDate(u.date.value, pick)"></mat-datepicker>
                             </form>
+                            <div class="error" *ngIf="(!u.date.valid || !u.date.value?.isSameOrAfter(currentDate)) && formSubmittedOneWay">
+                                Please provide a valid date.
+                            </div>
                         </div> 
                     </div>
                     <div class="col-md-6 col-xl-3">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                        <div class="bg-light rounded-4 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-person"></i> Travelers</label>
                             <input type="text" class="form-control rounded-4" placeholder="Travelers" aria-label="Travelers" 
-                            [value]="u.totalPassengers+ u.str" cdkOverlayOrigin #trig="cdkOverlayOrigin" (click)="showTrav = !showTrav">
+                            [value]="u.totalPassengers+ u.str" cdkOverlayOrigin #trig="cdkOverlayOrigin" (click)="showTrav = !showTrav" [ngClass]="{'is-invalid': formSubmittedOneWay && u.totalPassengers <= 0}">
+                            <div class="error" *ngIf="formSubmittedOneWay && u.totalPassengers <= 0">
+                                Please provide a valid number of travelers.
+                            </div>
                         </div> 
                     </div>
                     <div class="col-md-6 col-xl-6">
-                        <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+                        <div class="bg-light rounded-4 h-100 p-3">
                             <label class="mb-1"><i class="bi bi-suitcase"></i> Travel class</label>
                             <mat-chip-listbox>
                                 <mat-chip-option *ngFor="let option of u.passOption" [selected]="option.label === selectedOption.label" color="accent"
                                     (click)="selectedOption = option">{{ option.label }}</mat-chip-option>
                             </mat-chip-listbox> 
+                             <div class="error" *ngIf="formSubmittedOneWay && !selectedOption">
+                                Please provide a valid travel class.
+                            </div>
                         </div> 
                     </div>
-                    <div class="col-12 text-end pt-0">
-                        <button class="btn btn-primary mb-n4 rounded-4" (click)="searchFlightOneWay()"> Search</button>
+                    <div class="col-12 text-end">
+                        <button class="btn btn-primary rounded-pill" (click)="searchFlightOneWay()" style="margin-bottom: 5px;"> Search</button>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
     </div>
 </div>
@@ -162,21 +177,36 @@
     </div>
     <div class="passengerPanel">
         <span></span>
-        <button class="done" mat-button color="accent" (click)="u.calculateTotal(); showTrav = false">Done</button>
+        <button class="done" mat-button color="accent" class="rounded-pill" (click)="u.calculateTotal(); showTrav = false">Done</button>
     </div>
 </form>
 </ng-template>
 <ng-template cdkConnectedOverlay
 [cdkConnectedOverlayOrigin]="triggerFrom"
-[cdkConnectedOverlayOpen]="showSearchFrom">
-<div class="searchCityFrom" *ngIf="showSearchFrom" >
+[cdkConnectedOverlayOpen]="uSearch.showSearchFrom">
+<div class="searchCityFrom" *ngIf="uSearch.showSearchFrom" >
     <app-city-and-airport-search (citySelected)="receiveData($event)"></app-city-and-airport-search>
 </div>
 </ng-template>
 <ng-template cdkConnectedOverlay
 [cdkConnectedOverlayOrigin]="triggerTo"
-[cdkConnectedOverlayOpen]="showSearchTo">
-<div class="searchCityTo" *ngIf="showSearchTo">
+[cdkConnectedOverlayOpen]="uSearch.showSearchTo">
+<div class="searchCityTo" *ngIf="uSearch.showSearchTo">
     <app-city-and-airport-search (citySelected)="receiveData($event)"></app-city-and-airport-search>
 </div>
 </ng-template>
+<ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="triggerFromOneWay"
+[cdkConnectedOverlayOpen]="uSearch.showSearchFromOneWay">
+<div class="searchCityFrom" *ngIf="uSearch.showSearchFromOneWay" >
+    <app-city-and-airport-search (citySelected)="receiveData($event)"></app-city-and-airport-search>
+</div>
+</ng-template>
+<ng-template cdkConnectedOverlay
+[cdkConnectedOverlayOrigin]="triggerToOneWay"
+[cdkConnectedOverlayOpen]="uSearch.showSearchToOneWay">
+<div class="searchCityTo" *ngIf="uSearch.showSearchToOneWay">
+    <app-city-and-airport-search (citySelected)="receiveData($event)"></app-city-and-airport-search>
+</div>
+</ng-template>
+

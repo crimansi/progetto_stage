@@ -1,4 +1,4 @@
-import { Component, OnDestroy} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import { MatInput } from '@angular/material/input';
 import { MatMiniFabButton, MatButton } from '@angular/material/button';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -9,7 +9,7 @@ import { MatDateRangePicker, MatDateRangeInput, MatStartDate, MatEndDate, MatDat
 import {MatCheckbox} from '@angular/material/checkbox';
 import { ActivatedRoute, Router} from '@angular/router';
 import { UtilityPassenger, UtilitySearch } from '../../utils/Utility';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { FlightDetailsComponent } from '../flight-details/flight-details.component';
 import { CityAndAirportSearchComponent } from '../city-and-airport-search/city-and-airport-search.component';
@@ -20,41 +20,44 @@ import { FlightSearchService } from '../../service/flight-search.service';
 import { FilterflightService } from '../../service/filterflight.service';
 import { PriceFlightService } from '../../service/price-flight.service';
 import { IPriceFlight } from '../../model/IPriceFlight';
+import {MatDivider} from '@angular/material/divider';
+import * as bootstrap from 'bootstrap';
 
 export interface Sort {
   index: number,
   view: string
 }
 
+
 @Component({
   selector: 'app-flight-search-result',
   standalone: true,
   imports: [ MatInput, MatMiniFabButton, MatButton, MatIcon, OverlayModule, MatDateRangePicker, 
     MatDateRangeInput, MatStartDate, MatEndDate, MatDatepickerToggle, ReactiveFormsModule, FormsModule, NgFor, NgIf, MatCheckbox, MatSelect, MatOption,
-    FlightDetailsComponent, CityAndAirportSearchComponent, MatDatepicker, MatDatepickerInput],
+    FlightDetailsComponent, CityAndAirportSearchComponent, MatDatepicker, MatDatepickerInput, MatDivider, NgClass],
   templateUrl: './flight-search-result.component.html',
   styleUrl: './flight-search-result.component.css'
 })
 
 export class FlightSearchResultComponent implements OnDestroy{
-  u = new UtilityPassenger();
-  origin: string = '';
-  destination: string = '';
-  showTrav: boolean = false;
-  showSearchFrom: boolean = false;
-  showSearchTo: boolean = false;
-  showOp: boolean = false;
-  showDet: boolean = false;
-  uSearch: UtilitySearch = new UtilitySearch();
-  orIataCode: string = '';
-  destIataCode: string = '';
   strName: string = '';
+  timeDep: string = '';
+  timeArr: string = '';
+  tax:string = '';
+  strBags: string = '';
+  errorString: string = '';
+  showTrav: boolean = false;
+  showOp: boolean = false;
+  showOneWay: boolean = false;
+  formSubmitted: boolean = false;
+  formSubmittedOneWay: boolean = false;
+  u = new UtilityPassenger();
+  uSearch = new UtilitySearch();
   setAirline: Set<string> = new Set();
   setDepAir: Set<string> = new Set();
   setArAir: Set<string> = new Set();
   setStopAir: Set<string> = new Set();
-  private routeSubscription: Subscription;
-  modalOpened: boolean = false
+  routeSubscription: Subscription;
   results: IFlightSearch[] = []
   selectedOption = {
     label: '',
@@ -66,8 +69,6 @@ export class FlightSearchResultComponent implements OnDestroy{
     {index: 1, view: 'Price(highest to lowest)'},
     {index: 2, view: 'Duration(shortest)'},
     {index: 3, view: 'Duration(longest)'}];
-  timeDep: string = '';
-  timeArr: string = '';
   filters: any = {
     selectedStops: [],
     selectedAirlines: [],
@@ -76,8 +77,6 @@ export class FlightSearchResultComponent implements OnDestroy{
   };
   filteredResults: IFlightSearch[] = [];
   price: IFlightSearch [] = [];
-  tax:string = '';
-  strBags: string = '';
   priceDetails: IFlightSearch [] = [];
   priceFlight: IPriceFlight = {
     type: '',
@@ -86,23 +85,28 @@ export class FlightSearchResultComponent implements OnDestroy{
       emailAddressRequired: false,
       mobilePhoneNumberRequired: false,
       travelerRequirements: []
+    }
   }
-  }
-
+  currentDate = moment().startOf('day');
 
   constructor(private route: ActivatedRoute, private router: Router, private flightService: FlightSearchService, private filterAndSortService: FilterflightService, private priceService: PriceFlightService) {
     this.routeSubscription = this.route.queryParamMap.subscribe( params => {
-      this.origin = String(params.get('origin'));
-      this.orIataCode = this.origin.slice(this.origin.length-4,this.origin.length-1);
-      this.destination = String(params.get('destination'));
-      this.destIataCode = this.destination.slice(this.destination.length-4, this.destination.length-1);
+      this.uSearch.origin = String(params.get('origin'));
+      this.uSearch.orIataCode = this.uSearch.origin.slice(-4,-1);
+      this.uSearch.destination = String(params.get('destination'));
+      this.uSearch.destIataCode = this.uSearch.destination.slice(-4,-1);
       this.selectedOption.option = String(params.get('option'));
       const option = this.u.passOption.find(item => item.option == this.selectedOption.option);
       this.selectedOption.label = option ? option.label: '';
       const startDate = moment(params.get('startDate'));
-      this.u.range.controls['start'].setValue(startDate);
-      const endDate = moment(params.get('endDate'));
-      this.u.range.controls['end'].setValue(endDate);
+      if(params.get('endDate')){
+        this.u.range.controls['start'].setValue(startDate);
+        const endDate = moment(params.get('endDate'));
+        this.u.range.controls['end'].setValue(endDate);
+      } else {
+        this.u.date.setValue(startDate);
+        this.showOneWay = true;
+      }
       this.u.passengers.adult = Number(params.get('adult'));
       this.u.passengers.children = Number(params.get('children'));
       this.u.passengers.infants = Number(params.get('infants'));
@@ -116,43 +120,33 @@ export class FlightSearchResultComponent implements OnDestroy{
       this.setAirline.add(result.itineraries[0].segments[0].carrierCode);
       this.setDepAir.add(result.itineraries[0].segments[0].departure.iataCode);
       this.setArAir.add(result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.iataCode);
+
     }
   }
-
   ngOnDestroy(): void {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
   }
-
   searchFlight(){
-    let queryParams = this.uSearch.setQueryParams(this.origin, this.destination, this.u.range.value.start.format('YYYY-MM-DD'), 
-      this.u.range.value.end.format('YYYY-MM-DD'), this.selectedOption.option, 
-      this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants);
-    this.routeSubscription = this.flightService.getFlights(this.orIataCode, this.destIataCode, this.u.range.value.start.format('YYYY-MM-DD'), this.u.range.value.end.format('YYYY-MM-DD'),
-      this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants,  this.selectedOption.option, false).subscribe(
-        data => {
-          this.results = data;
-          this.flightService.setResults(this.results);
-          sessionStorage.setItem('results', JSON.stringify(this.results));
-          this.router.navigate(['/flightSearch'],
-                {queryParams: queryParams}
-          );
-    });
-  }
-
-  receiveData(city: IAirport): void {
-    if(this.showSearchFrom){
-      this.origin = city.name + ' (' + city.iataCode + ')';
-      this.orIataCode = city.iataCode;
-      this.showSearchFrom = false;
-    } else if(this.showSearchTo){
-      this.destination = city.name + ' (' + city.iataCode + ')';
-      this.destIataCode = city.iataCode;
-      this.showSearchTo = false;
+    this.formSubmitted = true;
+    this.formSubmittedOneWay = false;
+    if (this.uSearch.origin && this.uSearch.destination && this.u.range.valid && this.u.totalPassengers > 0 && this.selectedOption && this.u.range.value.start.isSameOrAfter(this.currentDate)){
+        this.uSearch.apiCall(this.routeSubscription, this.flightService, this.u.range.value.start.format('YYYY-MM-DD'), this.u.range.value.end.format('YYYY-MM-DD'),
+                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.results, this.router);
+    }
+  } 
+  searchFlightOneWay(){
+    this.formSubmittedOneWay = true;
+    this.formSubmitted = false;
+    if(this.u.date.value && this.uSearch.origin && this.uSearch.destination && this.u.totalPassengers > 0 && this.selectedOption && this.u.date.value.isSameOrAfter(this.currentDate)){
+      this.uSearch.apiCall(this.routeSubscription, this.flightService, this.u.date.value.format('YYYY-MM-DD'), '',
+                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.results, this.router);
     }
   }
-
+  receiveData(city: IAirport): void {
+    this.uSearch.receiveData(city);
+  }
   applySorting() {
     switch (this.selectedSort) {
       case 0:
@@ -171,7 +165,6 @@ export class FlightSearchResultComponent implements OnDestroy{
         break;
     }
   }
-
   applyFilters() {
     let result = sessionStorage.getItem('results')
     if (result) {
@@ -191,7 +184,6 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.results = this.filteredResults;
   }
-
   handleStopSelection(event: any, stop: number) {
     if (event.checked) {
       this.filters.selectedStops.push(stop);
@@ -203,7 +195,6 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
-
   handleAirlineSelection(event: any, airline: string) {
     if (event.checked) {
       this.filters.selectedAirlines.push(airline);
@@ -215,7 +206,6 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
-
   handleDepartureAirportSelection(event: any, airport: string) {
     if (event.checked) {
       this.filters.selectedDepartureAirports.push(airport);
@@ -227,7 +217,6 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
-
   handleArrivalAirportSelection(event: any, airport: string) {
     if (event.checked) {
       this.filters.selectedArrivalAirports.push(airport);
@@ -239,7 +228,6 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
-  
   onItemClick(item: IFlightSearch){
     this.routeSubscription = this.priceService.getPriceFlight(item).subscribe(data => {
       this.price = data.flightOffers;
@@ -250,8 +238,15 @@ export class FlightSearchResultComponent implements OnDestroy{
       if(this.price[0].travelerPricings[0].fareDetailsBySegment[0].includedCheckedBags){
       if(this.price[0].travelerPricings[0].fareDetailsBySegment[0].includedCheckedBags.quantity > 1)
         this.strBags = 'bags';
-    } else
-      this.strBags = 'bag';
+      } else
+        this.strBags = 'bag';
+      const testModal = new bootstrap.Modal('#flightdetail',{} );
+      testModal.show();
+    },
+    error => {
+      this.errorString = 'Sorry, we couldn\'t find the data you requested. Please try searching again.';
+      const testModal = new bootstrap.Modal('#flightdetail',{} );
+      testModal.show();
     });
   }
   onBookClick(item: IFlightSearch){
@@ -260,14 +255,11 @@ export class FlightSearchResultComponent implements OnDestroy{
        this.priceFlight = JSON.parse(stringItem);
        this.priceDetails = this.priceFlight.flightOffers;
       if(this.priceDetails[0].id === item.id){
-        console.log('entra in if')
         this.router.navigate(['/travelDetails']);
       } else{
-        console.log('entra in else1');
         this.onBook(item);
       }
     } else {
-      console.log('entra in else2');
       this.onBook(item);
     }
   }
@@ -276,6 +268,8 @@ export class FlightSearchResultComponent implements OnDestroy{
       this.price = data.flightOffers;
       sessionStorage.setItem('clickPrice', JSON.stringify(data));
       this.router.navigate(['/travelDetails']);
+    }, error =>{
+      this.errorString = 'Sorry, we couldn\'t find the data you requested. Please try searching again.';
     });
   }
   

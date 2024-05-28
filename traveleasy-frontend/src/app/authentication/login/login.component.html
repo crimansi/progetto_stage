@@ -1,3 +1,47 @@
 <div class="container h-100">
-    
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12">
+            <div class="shadow bg-white rounded-4 overflow-hidden" style="margin:20px;">
+                <div class="row g-0">
+                    <div class="col-lg-6 d-flex align-items-center order-2 order-lg-1">
+                        <div class="p-3 p-lg-5">
+                            <img src="assets/images/login.svg" style="height:150%; width:150%;">
+                            <span class="description">Image by Storyset on Freepik</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-1">
+                        <div class="p-4 p-sm-7">
+                            <h1 class="fw-bolder">✈️ Login</h1>
+                            <div *ngIf="formSubmit && error.length > 0" class="alert alert-danger rounded-4" role="alert"  style="width: 75%; margin: 5px;">
+                                {{this.error}}
+                            </div>
+                            <div class="text-start" style="margin-top:40px;">
+                                <form style="margin: 5px;">
+                                    <label class="form-label">Enter your username</label>
+                                    <input type="text" class="form-control rounded-pill" style="width: 75%;" name="username" placeholder="Username" (click)="formSubmit = false" [(ngModel)]="request.username"
+                                    [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                </form>
+                                <form style="margin:5px">
+                                    <label class="form-label">Enter your password</label>
+                                    <div class="input-group" style="width: 75%;">
+                                        <input class="form-control rounded-start-pill" type="{{hide ? 'password' : 'text'}}" name="password" placeholder="Password" (click)="formSubmit = false" [(ngModel)]="request.password" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': hide, 'bi-eye-fill': !hide}" (click)="hide = !hide"></button>
+                                    </div>
+                                </form>
+                                <div class="text-end" style="width: 75%; margin:5px;">
+                                    <button mat-button color="accent" disabled>Forgot your password?</button>
+                                    <p style="font-size: 0.75rem;">Service unavailable for the moment</p>
+                                </div>
+                                <button type="button" class="btn rounded-pill btn-primary" style="width: 75%; margin:40px 5px 5px 5px" (click)="login(); formSubmit = true">Login</button>
+                                <div class="text-start" style="margin:30px 5px 5px 5px">
+                                    <span>Don't have an account?</span>
+                                    <button mat-button color="accent" class="rounded-pill" routerLink="/signUp" routerLinkActive>Sign Up</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

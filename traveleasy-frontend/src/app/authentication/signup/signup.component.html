@@ -1,1 +1,75 @@
-<p>signup works!</p>
+<div class="container h-100">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12">
+            <div class="shadow bg-white rounded-4 overflow-hidden" style="margin:20px;">
+                <div class="row g-0">
+                    <div class="col-lg-6 d-flex align-items-center order-2 order-lg-1">
+                        <div class="p-3 p-lg-5">
+                            <img src="assets/images/login.svg" style="height:150%; width:150%;">
+                            <span class="description">Image by Storyset on Freepik</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-1">
+                        <div class="p-4 p-sm-7">
+                            <h1 class="fw-bolder">✈️ Sign Up</h1>
+                            <div *ngIf="formSubmit && message" class="alert alert-success rounded-4" role="alert" style="width: 75%; margin: 5px;">
+                                {{this.message}}
+                            </div>
+                            <div *ngIf="formSubmit && error.length >  0" class="alert alert-danger rounded-4" role="alert"  style="width: 75%; margin: 5px;">
+                                {{this.error}}
+                            </div>
+                            <div class="text-start" style="margin-top:40px;">
+                                <form style="margin: 5px;">
+                                    <label class="form-label">Enter your username</label>
+                                    <input type="text" class="form-control rounded-pill" style="width: 75%;" name="username" placeholder="Username" [(ngModel)]="user.username" (click)="formSubmit = false; showPasswordValidation = false" (focus)="showPasswordValidation = false"
+                                    [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                </form>
+                                <form style="margin:5px;">
+                                    <label class="form-label">Enter your full name</label>
+                                <div class="input-group" style="width: 75%;" (click)="formSubmit = false; showPasswordValidation = false">
+                                    <input type="text" class="form-control rounded-start-pill" placeholder="First Name" name="firstName" [(ngModel)]="user.firstName" (focus)="showPasswordValidation = false" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                    <input type="text" class="form-control rounded-end-pill" placeholder="Last Name" name="lastName" [(ngModel)]="user.lastName" (focus)="showPasswordValidation = false" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                </div>
+                                </form>
+                                <form style="margin: 5px;">
+                                    <label class="form-label">Enter your email</label>
+                                    <input type="email" class="form-control rounded-pill" style="width: 75%;" name="email" placeholder="Email" [(ngModel)]="user.email" (click)="formSubmit = false; showPasswordValidation = false" (focus)="showPasswordValidation = false"
+                                    [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                </form>
+                                <form style="margin:5px">
+                                    <label class="form-label">Enter your password</label>
+                                    <div class="input-group" style="width: 75%;" (click)="showPasswordValidation = true; formSubmit = false">
+                                        <input class="form-control rounded-start-pill" type="{{hide ? 'password' : 'text'}}" name="password" placeholder="Password" [(ngModel)]="user.password" (focus)="showPasswordValidation = true"  [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': hide, 'bi-eye-fill': !hide}" (click)="hide = !hide"></button>
+                                    </div>
+                                    <div class="card card-body rounded-4" role="alert" style="width:75%; margin-top:5px;" *ngIf="showPasswordValidation">
+                                        <h6>Password must contain the following:</h6>
+                                        <ul>
+                                            <li class="small">A lowercase letter</li>
+                                            <li class="small">A capital (uppercase) letter</li>
+                                            <li class="small">A number</li>
+                                            <li class="small">Minimum 8 characters and maximum 20 characters</li>
+                                        </ul>
+                                    </div>
+                                </form>
+                                <form style="margin:5px">
+                                    <label class="form-label">Confirm your password</label>
+                                    <div class="input-group" style="width: 75%;" (click)="formSubmit = false; showPasswordValidation = false">
+                                        <input class="form-control rounded-start-pill" type="{{hideConfirm ? 'password' : 'text'}}" name="confirm" placeholder="Confirm password" [(ngModel)]="user.confirmPassword"  (focus)="showPasswordValidation = false"  [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': hideConfirm, 'bi-eye-fill': !hideConfirm}" (click)="hideConfirm = !hideConfirm"></button>
+                                    </div>
+                                </form>
+                                <button type="button" class="btn rounded-pill btn-primary" style="width: 75%; margin:40px 5px 5px 5px" (click)="signUp(); formSubmit = true">Sign Up</button>
+                                <div class="text-start" style="margin:30px 5px 5px 5px">
+                                    <span>Have an account?</span>
+                                    <button mat-button color="accent" class="rounded-pill" routerLink="/login" routerLinkActive>Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

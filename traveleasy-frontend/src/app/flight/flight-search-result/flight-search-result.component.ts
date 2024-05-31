@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, AfterContentChecked} from '@angular/core';
 import { MatInput } from '@angular/material/input';
 import { MatMiniFabButton, MatButton } from '@angular/material/button';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -18,8 +18,7 @@ import { IAirport } from '../../model/IAirports';
 import { IFlightSearch } from '../../model/IFlightSearch';
 import { FlightSearchService } from '../../service/flight-search.service';
 import { FilterflightService } from '../../service/filterflight.service';
-import { PriceFlightService } from '../../service/price-flight.service';
-import { IPriceFlight } from '../../model/IPriceFlight';
+import { PriceFlightService } from '../../service/price-flight.service';     
 import {MatDivider} from '@angular/material/divider';
 import * as bootstrap from 'bootstrap';
 
@@ -27,7 +26,6 @@ export interface Sort {
   index: number,
   view: string
 }
-
 
 @Component({
   selector: 'app-flight-search-result',
@@ -38,8 +36,7 @@ export interface Sort {
   templateUrl: './flight-search-result.component.html',
   styleUrl: './flight-search-result.component.css'
 })
-
-export class FlightSearchResultComponent implements OnDestroy{
+export class FlightSearchResultComponent implements OnDestroy, OnInit, AfterContentChecked{
   strName: string = '';
   timeDep: string = '';
   timeArr: string = '';
@@ -75,21 +72,44 @@ export class FlightSearchResultComponent implements OnDestroy{
     selectedDepartureAirports: [],
     selectedArrivalAirports: []
   };
-  filteredResults: IFlightSearch[] = [];
   price: IFlightSearch [] = [];
-  priceDetails: IFlightSearch [] = [];
-  priceFlight: IPriceFlight = {
-    type: '',
-    flightOffers: [],
-    bookingRequirements: {
-      emailAddressRequired: false,
-      mobilePhoneNumberRequired: false,
-      travelerRequirements: []
-    }
-  }
   currentDate = moment().startOf('day');
 
-  constructor(private route: ActivatedRoute, private router: Router, private flightService: FlightSearchService, private filterAndSortService: FilterflightService, private priceService: PriceFlightService) {
+  get totalResults(){
+    this.setAirline.clear();
+    this.setArAir.clear();
+    this.setDepAir.clear();
+    let resultsString = sessionStorage.getItem('results');
+    if(resultsString){
+      this.results = JSON.parse(resultsString);
+    for(let result of this.results){
+      this.setAirline.add(result.itineraries[0].segments[0].carrierCode);
+      this.setDepAir.add(result.itineraries[0].segments[0].departure.iataCode);
+      this.setArAir.add(result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.iataCode);
+    }
+    this.applySorting();
+    this.applyFilters();
+    return this.results;
+    }
+    return [];
+  }
+
+  constructor(private route: ActivatedRoute, private router: Router, private flightService: FlightSearchService, private filterAndSortService: FilterflightService, private priceService: PriceFlightService, private cdr: ChangeDetectorRef) {
+    this.routeSubscription = new Subscription;
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
+
+  ngAfterContentChecked(): void {
+      this.totalResults;
+      this.cdr.detectChanges();
+  }
+
+  ngOnInit(): void{
     this.routeSubscription = this.route.queryParamMap.subscribe( params => {
       this.uSearch.origin = String(params.get('origin'));
       this.uSearch.orIataCode = this.uSearch.origin.slice(-4,-1);
@@ -112,41 +132,30 @@ export class FlightSearchResultComponent implements OnDestroy{
       this.u.passengers.infants = Number(params.get('infants'));
       this.u.calculateTotal();
     });
-    let result = sessionStorage.getItem('results');
-    if(result){
-      this.results = JSON.parse(result);
-    }
-    for(let result of this.results){
-      this.setAirline.add(result.itineraries[0].segments[0].carrierCode);
-      this.setDepAir.add(result.itineraries[0].segments[0].departure.iataCode);
-      this.setArAir.add(result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.iataCode);
+  }
 
-    }
-  }
-  ngOnDestroy(): void {
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
-  }
   searchFlight(){
     this.formSubmitted = true;
     this.formSubmittedOneWay = false;
     if (this.uSearch.origin && this.uSearch.destination && this.u.range.valid && this.u.totalPassengers > 0 && this.selectedOption && this.u.range.value.start.isSameOrAfter(this.currentDate)){
         this.uSearch.apiCall(this.routeSubscription, this.flightService, this.u.range.value.start.format('YYYY-MM-DD'), this.u.range.value.end.format('YYYY-MM-DD'),
-                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.results, this.router);
+                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.router);
     }
   } 
+
   searchFlightOneWay(){
     this.formSubmittedOneWay = true;
     this.formSubmitted = false;
     if(this.u.date.value && this.uSearch.origin && this.uSearch.destination && this.u.totalPassengers > 0 && this.selectedOption && this.u.date.value.isSameOrAfter(this.currentDate)){
       this.uSearch.apiCall(this.routeSubscription, this.flightService, this.u.date.value.format('YYYY-MM-DD'), '',
-                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.results, this.router);
+                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.router);
     }
   }
+
   receiveData(city: IAirport): void {
     this.uSearch.receiveData(city);
   }
+
   applySorting() {
     switch (this.selectedSort) {
       case 0:
@@ -165,25 +174,22 @@ export class FlightSearchResultComponent implements OnDestroy{
         break;
     }
   }
+
   applyFilters() {
-    let result = sessionStorage.getItem('results')
-    if (result) {
-      this.filteredResults = JSON.parse(result);
-    }
     if (this.filters.selectedStops && this.filters.selectedStops.length > 0) {
-      this.filteredResults = this.filterAndSortService.filterResultsByStops(this.filteredResults, this.filters.selectedStops);
+      this.results = this.filterAndSortService.filterResultsByStops(this.results, this.filters.selectedStops);
     }
     if (this.filters.selectedAirlines && this.filters.selectedAirlines.length > 0) {
-      this.filteredResults = this.filterAndSortService.filterResultsByAirlines(this.filteredResults, this.filters.selectedAirlines);
+      this.results = this.filterAndSortService.filterResultsByAirlines(this.results, this.filters.selectedAirlines);
     }
     if (this.filters.selectedDepartureAirports && this.filters.selectedDepartureAirports.length > 0) {
-      this.filteredResults = this.filterAndSortService.filterResultsByAirports(this.filteredResults, this.filters.selectedDepartureAirports, true);
+      this.results = this.filterAndSortService.filterResultsByAirports(this.results, this.filters.selectedDepartureAirports, true);
     }
     if (this.filters.selectedArrivalAirports && this.filters.selectedArrivalAirports.length > 0) {
-      this.filteredResults = this.filterAndSortService.filterResultsByAirports(this.filteredResults, this.filters.selectedArrivalAirports, false);
+      this.results = this.filterAndSortService.filterResultsByAirports(this.results, this.filters.selectedArrivalAirports, false);
     }
-    this.results = this.filteredResults;
   }
+
   handleStopSelection(event: any, stop: number) {
     if (event.checked) {
       this.filters.selectedStops.push(stop);
@@ -195,6 +201,7 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
+
   handleAirlineSelection(event: any, airline: string) {
     if (event.checked) {
       this.filters.selectedAirlines.push(airline);
@@ -206,6 +213,7 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
+
   handleDepartureAirportSelection(event: any, airport: string) {
     if (event.checked) {
       this.filters.selectedDepartureAirports.push(airport);
@@ -217,6 +225,7 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
+
   handleArrivalAirportSelection(event: any, airport: string) {
     if (event.checked) {
       this.filters.selectedArrivalAirports.push(airport);
@@ -228,7 +237,8 @@ export class FlightSearchResultComponent implements OnDestroy{
     }
     this.applyFilters();
   }
-  onItemClick(item: IFlightSearch){
+
+   onItemClick(item: IFlightSearch){
     this.routeSubscription = this.priceService.getPriceFlight(item).subscribe(data => {
       this.price = data.flightOffers;
       sessionStorage.setItem('clickPrice', JSON.stringify(data));
@@ -244,33 +254,20 @@ export class FlightSearchResultComponent implements OnDestroy{
       testModal.show();
     },
     error => {
-      this.errorString = 'Sorry, we couldn\'t find the data you requested. Please try searching again.';
+      this.errorString = 'Sorry, we couldn\'t find the data you requested.\n Please try searching again.';
       const testModal = new bootstrap.Modal('#flightdetail',{} );
       testModal.show();
     });
   }
+  
   onBookClick(item: IFlightSearch){
-    let stringItem = sessionStorage.getItem('clickPrice');
-    if(stringItem){
-       this.priceFlight = JSON.parse(stringItem);
-       this.priceDetails = this.priceFlight.flightOffers;
-      if(this.priceDetails[0].id === item.id){
-        this.router.navigate(['/travelDetails']);
-      } else{
-        this.onBook(item);
-      }
-    } else {
-      this.onBook(item);
-    }
-  }
-  onBook(item: IFlightSearch): void{
     this.routeSubscription = this.priceService.getPriceFlight(item).subscribe(data => {
       this.price = data.flightOffers;
       sessionStorage.setItem('clickPrice', JSON.stringify(data));
       this.router.navigate(['/travelDetails']);
     }, error =>{
-      this.errorString = 'Sorry, we couldn\'t find the data you requested. Please try searching again.';
+      this.errorString = 'Sorry, we couldn\'t find the data you requested.\n Please try searching again.';
     });
   }
-  
 }
+

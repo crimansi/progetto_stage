@@ -25,7 +25,7 @@
                                     <label class="form-label">Enter your password</label>
                                     <div class="input-group" style="width: 75%;">
                                         <input class="form-control rounded-start-pill" type="{{hide ? 'password' : 'text'}}" name="password" placeholder="Password" (click)="formSubmit = false" [(ngModel)]="request.password" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
-                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': hide, 'bi-eye-fill': !hide}" (click)="hide = !hide"></button>
+                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': !hide, 'bi-eye-fill': hide}" (click)="hide = !hide"></button>
                                     </div>
                                 </form>
                                 <div class="text-end" style="width: 75%; margin:5px;">

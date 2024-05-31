@@ -20,8 +20,10 @@ export class FilterflightService {
   }
 
   filterResultsByAirports(results: IFlightSearch[], selectedAirports: string[], isDeparture: boolean): IFlightSearch[] {
-    const key = isDeparture ? 'departure' : 'arrival';
-    return results.filter(result => selectedAirports.includes(result.itineraries[0].segments[0][key].iataCode));
+    if(isDeparture)
+      return results.filter(result => selectedAirports.includes(result.itineraries[0].segments[0].departure.iataCode));
+    else
+      return results.filter(result => selectedAirports.includes(result.itineraries[0].segments[result.itineraries[0].segments.length - 1].arrival.iataCode));
   }
 
   sortResultsByPriceLowToHigh(results: IFlightSearch[]): IFlightSearch[] {
@@ -55,6 +57,7 @@ export class FilterflightService {
       return durationB - durationA;
     });
   }
+  
   calculateDurationInMinutes(duration: string): number {
     const hoursMatch = duration.match(/(\d+)H/);
     const minutesMatch = duration.match(/(\d+)M/);

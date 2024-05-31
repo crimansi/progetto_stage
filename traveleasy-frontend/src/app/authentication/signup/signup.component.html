@@ -26,21 +26,21 @@
                                 </form>
                                 <form style="margin:5px;">
                                     <label class="form-label">Enter your full name</label>
-                                <div class="input-group" style="width: 75%;" (click)="formSubmit = false; showPasswordValidation = false">
-                                    <input type="text" class="form-control rounded-start-pill" placeholder="First Name" name="firstName" [(ngModel)]="user.firstName" (focus)="showPasswordValidation = false" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
-                                    <input type="text" class="form-control rounded-end-pill" placeholder="Last Name" name="lastName" [(ngModel)]="user.lastName" (focus)="showPasswordValidation = false" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
-                                </div>
+                                    <div class="input-group" style="width: 75%;" (click)="formSubmit = false; showPasswordValidation = false">
+                                        <input type="text" class="form-control rounded-start-pill" placeholder="First Name" name="firstName" [(ngModel)]="user.firstName" (focus)="showPasswordValidation = false" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                        <input type="text" class="form-control rounded-end-pill" placeholder="Last Name" name="lastName" [(ngModel)]="user.lastName" (focus)="showPasswordValidation = false" [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                    </div>
                                 </form>
                                 <form style="margin: 5px;">
                                     <label class="form-label">Enter your email</label>
                                     <input type="email" class="form-control rounded-pill" style="width: 75%;" name="email" placeholder="Email" [(ngModel)]="user.email" (click)="formSubmit = false; showPasswordValidation = false" (focus)="showPasswordValidation = false"
-                                    [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
+                                        [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
                                 </form>
                                 <form style="margin:5px">
                                     <label class="form-label">Enter your password</label>
                                     <div class="input-group" style="width: 75%;" (click)="showPasswordValidation = true; formSubmit = false">
                                         <input class="form-control rounded-start-pill" type="{{hide ? 'password' : 'text'}}" name="password" placeholder="Password" [(ngModel)]="user.password" (focus)="showPasswordValidation = true"  [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
-                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': hide, 'bi-eye-fill': !hide}" (click)="hide = !hide"></button>
+                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': !hide, 'bi-eye-fill': hide}" (click)="hide = !hide"></button>
                                     </div>
                                     <div class="card card-body rounded-4" role="alert" style="width:75%; margin-top:5px;" *ngIf="showPasswordValidation">
                                         <h6>Password must contain the following:</h6>
@@ -56,7 +56,7 @@
                                     <label class="form-label">Confirm your password</label>
                                     <div class="input-group" style="width: 75%;" (click)="formSubmit = false; showPasswordValidation = false">
                                         <input class="form-control rounded-start-pill" type="{{hideConfirm ? 'password' : 'text'}}" name="confirm" placeholder="Confirm password" [(ngModel)]="user.confirmPassword"  (focus)="showPasswordValidation = false"  [ngClass]="{'is-invalid': formSubmit && error.length > 0}">
-                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': hideConfirm, 'bi-eye-fill': !hideConfirm}" (click)="hideConfirm = !hideConfirm"></button>
+                                        <button  class="input-group-text rounded-end-pill border-start-0" [ngClass]="{'bi-eye-slash-fill': !hideConfirm, 'bi-eye-fill': hideConfirm}" (click)="hideConfirm = !hideConfirm"></button>
                                     </div>
                                 </form>
                                 <button type="button" class="btn rounded-pill btn-primary" style="width: 75%; margin:40px 5px 5px 5px" (click)="signUp(); formSubmit = true">Sign Up</button>

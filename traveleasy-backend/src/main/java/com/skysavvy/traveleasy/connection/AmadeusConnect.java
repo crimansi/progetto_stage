@@ -27,13 +27,16 @@ public enum AmadeusConnect {
                 .and("adults", adults)
                 .and("children", children)
                 .and("infants", infants)
-                .and("travelClass", travelClass.toString())
                 .and("nonStop", nonStop)
                 .and("currencyCode", "EUR")
                 .and("max", 32);
+        if (travelClass != TravelClass.ANY) {
+            params = params.and("travelClass", travelClass.toString());
+        }
         if (returnDate != null) {
             params = params.and("returnDate", returnDate);
         }
+
         return amadeus.shopping.flightOffersSearch.get(params);
     }
 

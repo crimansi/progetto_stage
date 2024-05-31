@@ -39,82 +39,74 @@ html{
 .mat-mdc-standard-chip{
     --mdc-chip-label-text-font: 'Poppins', sans-serif !important;
 }
-  .travellers{
+.travellers{
     background-color: #fffbfe;
     width: 300px;
     max-height: 400px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border-radius: 15px;
-  }
+}
  
-  .passengerPanel{
-      margin-top:5px;
-      margin-right:5px;
-      margin-left: 5px;
-      display:flex;
-      justify-content: space-between;
-      align-items: center;
-      line-height: 100%;
-  }
-  .searchCityFrom, .searchCityTo{
-     height: 400px;
-     border-radius: 15px;
-     background: #fffbfe;
-     text-align: center;
-     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-     overflow-y: auto;
-     overflow-x: hidden;
-     margin-right:5px;
- }
- 
- .description{
-     display: block !important;
-     font-size: 0.75rem;
-     line-height: 1rem;
-     margin-block-start: 2px;
-     text-align: center;
- 
- }
- .descriptionDet{
-    display: block !important;
+.passengerPanel{
+    margin-top:5px;
+    margin-right:5px;
+    margin-left: 5px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 100%;
+}
+.searchCityFrom, .searchCityTo{
+    height: 400px;
+    border-radius: 15px;
+    background: #fffbfe;
     text-align: center;
- }
- p{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-right:5px;
+}
+ 
+.description{
+    display: block !important;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin-block-start: 2px;
+    text-align: center;
+}
+p{
     margin: 0px !important;
  }
- .mat-mdc-checkbox{
+.mat-mdc-checkbox{
     --mdc-form-field-label-text-font: 'Poppins', sans-serif;
- }
- 
- .mdc-checkbox__background{
+ } 
+.mdc-checkbox__background{
     border-radius: 5px !important;
- }
- .cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel{
+}
+.cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel{
     border-radius: 15px !important;
 }
 .cdk-overlay-container {
     z-index: 1500 !important;
     border-radius: 15px !important;
-  }
+}
 .mat-mdc-option{
     font-size: 14px !important;
 }
 .checkOut{
     width: 93%;
 }
-
 input:focus {
     outline: none; 
-  }
-
+}
 .icon-airplane{
     width: 2.6rem;
     height: 2.6rem;
     line-height: 2.6rem;
     text-align: center;
     font-size: 1rem;
- }
- .mat-datepicker-content, .dropdown-menu{
+}
+.mat-datepicker-content, .dropdown-menu{
     border-radius: 15px !important;
  }
  .ngb-dp-header {

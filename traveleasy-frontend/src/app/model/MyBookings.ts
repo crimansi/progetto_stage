@@ -1,5 +1,3 @@
-import { ITravelers } from "./ITravelers"
-import { AuthResponse } from "./IUser"
 
 export interface MyBooking{
     date: Date,

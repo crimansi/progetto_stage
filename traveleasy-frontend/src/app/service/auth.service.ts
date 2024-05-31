@@ -17,7 +17,6 @@ export class AuthService {
   signUp(request: SignUpRequest): Observable<MessageResponse>{
     return this.http.post<MessageResponse>(this.baseUrlSignUp, request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error.error);
         throw Error(error.error);
       })
     );
@@ -30,7 +29,6 @@ export class AuthService {
         this.avatar = data.firstName.toUpperCase().charAt(0) + data.lastName.toUpperCase().charAt(0);
       }),
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         throw Error(error.message);
       })
     );

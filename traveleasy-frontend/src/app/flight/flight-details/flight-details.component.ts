@@ -1,7 +1,8 @@
 import { Component, Input} from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { NgFor, NgIf } from '@angular/common'; 
-import { IFlightSearch} from '../../model/IFlightSearch';;
+import { IFlightSearch} from '../../model/IFlightSearch';
+
 @Component({
   selector: 'app-flight-details',
   standalone: true,

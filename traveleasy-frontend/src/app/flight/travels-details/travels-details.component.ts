@@ -7,7 +7,6 @@ import { NgbDateStruct, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { ITravelers, ITravelersResponse } from '../../model/ITravelers';
 import { TravelersService } from '../../service/travelers.service';
 import { BookFlightService } from '../../service/book-flight.service';
-import { IPriceFlight } from '../../model/IPriceFlight';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,60 +18,53 @@ import { Subscription } from 'rxjs';
 })
 export class TravelsDetailsComponent implements OnDestroy {
   formSubmit: boolean = false;
+  booked: boolean = false;
   offerFlight: IFlightSearch[] = [];
   private subscriptions: Subscription[] = [];
   showAlert: boolean = false;
-  priceFlight: IPriceFlight = {
-    type: '',
-    flightOffers: [],
-    bookingRequirements: {
-      emailAddressRequired: false,
-      mobilePhoneNumberRequired: false,
-      travelerRequirements: []
-    }
-  }
   travelers: ITravelers[] = [];
   travResponse: ITravelersResponse[] = [];
   dateOfBirthNonFormat: NgbDateStruct[] = [];
   genders: string[] = ['MALE', 'FEMALE'];
-  booked: boolean = false;
   error: string = '';
 
+  get priceFlight(){
+    let priceString = sessionStorage.getItem('clickPrice');
+    if(priceString)
+      return JSON.parse(priceString)
+    return null;
+  }
   constructor(private travelerService: TravelersService, private bookService: BookFlightService) {
-    let offer = sessionStorage.getItem('clickPrice');
-    if (offer) {
-      this.priceFlight = JSON.parse(offer);
-      this.offerFlight = this.priceFlight.flightOffers;
-      if (this.offerFlight && this.offerFlight.length > 0) {
-        this.travelers = new Array(this.offerFlight[0].travelerPricings.length).fill(null).map(() => ({
-          id: '',
-          name: {
-            firstName: '',
-            lastName: ''
-          },
-          dateOfBirth: '',
-          gender: ''
-        }));
-        this.dateOfBirthNonFormat = new Array(this.offerFlight[0].travelerPricings.length).fill(null).map(() => ({
-          day: 0,
-          month: 0,
-          year: 0
-        }));
-      }
+    this.offerFlight = this.priceFlight.flightOffers;
+    if (this.offerFlight && this.offerFlight.length > 0) {
+      this.travelers = new Array(this.offerFlight[0].travelerPricings.length).fill(null).map(() => ({
+        id: '',
+        name: {
+          firstName: '',
+          lastName: ''
+        },
+        dateOfBirth: '',
+        gender: ''
+      }));
+      this.dateOfBirthNonFormat = new Array(this.offerFlight[0].travelerPricings.length).fill(null).map(() => ({
+        day: 0,
+        month: 0,
+        year: 0
+      }));
     }
   }
 
   bookNow() {
     this.formSubmit = true;
+    const formattedDates = this.dateOfBirthNonFormat.map(date => this.formatDate(date));
+    for (let i = 0; i < this.travelers.length; i++) {
+      this.travelers[i].id = this.offerFlight[0].travelerPricings[i].travelerId;
+      this.travelers[i].dateOfBirth = formattedDates[i];
+    }
+    console.log('trav: ', this.travelers);
+    const userString = sessionStorage.getItem('user');
     if (this.areTravelersValid()) {
       this.error = '';
-      const formattedDates = this.dateOfBirthNonFormat.map(date => this.formatDate(date));
-      for (let i = 0; i < this.travelers.length; i++) {
-        this.travelers[i].id = this.offerFlight[0].travelerPricings[i].travelerId;
-        this.travelers[i].dateOfBirth = formattedDates[i];
-      }
-      console.log('trav: ', this.travelers);
-      const userString = sessionStorage.getItem('user');
       if (userString) {
         const addTravelersSubscription = this.travelerService.addTravelers(this.travelers).subscribe(data => {
           this.travResponse = data;
@@ -86,12 +78,10 @@ export class TravelsDetailsComponent implements OnDestroy {
           this.subscriptions.push(bookFlightSubscription);
         });
         this.subscriptions.push(addTravelersSubscription);
-      } else {
+      } else 
         this.showAlert = true;
-      }
-    } else {
+    } else 
       this.error = 'All traveler fields must be filled.'
-    }
   }
 
   areTravelersValid(): boolean {
@@ -104,9 +94,8 @@ export class TravelsDetailsComponent implements OnDestroy {
   }
 
   formatDate(date: NgbDateStruct): string {
-    if (date) {
+    if (date) 
       return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`;
-    }
     return '';
   }
 

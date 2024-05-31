@@ -12,7 +12,6 @@ export class TravelersService {
   addTravelers(travelers: ITravelers[]): Observable<ITravelersResponse[]> {
     return this.http.post<ITravelersResponse[]>(this.baseUrl, travelers).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         throw Error(error.message);
       })
     );

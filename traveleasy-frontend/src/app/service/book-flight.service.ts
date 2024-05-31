@@ -19,7 +19,6 @@ export class BookFlightService {
     };
     return this.http.post<IBookingFlight>(this.baseUrl, request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         throw Error(error.message);
       })
     );

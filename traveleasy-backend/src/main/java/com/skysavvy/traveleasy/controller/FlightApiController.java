@@ -37,7 +37,7 @@ public class FlightApiController {
                                        @RequestParam Integer adults,
                                        @RequestParam(required = false, defaultValue = "0") Integer children,
                                        @RequestParam(required = false, defaultValue = "0") Integer infants,
-                                       @RequestParam(required = false, defaultValue = "ECONOMY") TravelClass travelClass,
+                                       @RequestParam(required = false, defaultValue = "ANY") TravelClass travelClass,
                                        @RequestParam(required = false, defaultValue = "false") boolean nonStop)
             throws ResponseException {
         return AmadeusConnect.INSTANCE.flights(origin, destination, departDate, returnDate, adults,children, infants, travelClass, nonStop);

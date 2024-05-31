@@ -5,7 +5,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MY_DATE_FORMATS } from './utils/Const';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { provideHttpClient, withInterceptors, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
-import {provideNativeDateAdapter} from '@angular/material/core';
 
 export const authenticationInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next:
   HttpHandlerFn) => {

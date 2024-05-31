@@ -12,6 +12,7 @@ export interface Filter{
   range: string,
   view: string
 }
+
 @Component({
   selector: 'app-my-booking',
   standalone: true,
@@ -30,7 +31,9 @@ export class MyBookingComponent implements OnInit, OnDestroy {
   showAsc: boolean = false;
   selectedRange: Filter = this.ranges[0];
   bookingSubscriptions: Subscription[] = [];
+
   constructor(private bookingService: MyBookingService){}
+
   ngOnInit(): void {
     const tokenUser = sessionStorage.getItem('user');
     if(tokenUser){
@@ -40,6 +43,7 @@ export class MyBookingComponent implements OnInit, OnDestroy {
         this.bookingSubscriptions.push(firstSubscription);
     }
   }
+
   deleteBook(id: number): void {
     const secSubscription = this.bookingService.deleteBooking(id).subscribe( data => {
       console.log('Delete booking', id);
@@ -50,6 +54,7 @@ export class MyBookingComponent implements OnInit, OnDestroy {
     });
     this.bookingSubscriptions.push(secSubscription)
   }
+
   applyRangeAndSort(range: string, sort: boolean){
     if(sort){
       const subscription = this.bookingService.selectedRange(range, 'ASC').subscribe(data => {
@@ -64,6 +69,7 @@ export class MyBookingComponent implements OnInit, OnDestroy {
     this.bookingSubscriptions.push(subscription)
     }
   }
+
   ngOnDestroy(): void {
       this.bookingSubscriptions.forEach(subscription => subscription.unsubscribe());
   }

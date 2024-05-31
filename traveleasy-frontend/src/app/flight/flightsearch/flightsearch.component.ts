@@ -35,13 +35,13 @@ export class FlightsearchComponent implements OnDestroy{
   u = new UtilityPassenger();
   uSearch = new UtilitySearch();
   selectedOption = this.u.passOption[0];
-  results: IFlightSearch[] = [];
   flightSubscription: Subscription;
   currentDate = moment().startOf('day');
 
   constructor(private router: Router, private flightService: FlightSearchService){
     this.flightSubscription = new Subscription;
   }
+
   swapInput(){
     const temp = this.uSearch.origin;
     this.uSearch.origin = this.uSearch.destination;
@@ -50,28 +50,32 @@ export class FlightsearchComponent implements OnDestroy{
     this.uSearch.orIataCode = this.uSearch.destIataCode;
     this.uSearch.destIataCode = tempCode;
   }
+
   searchFlightRoundTrip(){
     this.formSubmitted = true;
     this.formSubmittedOneWay = false;
     console.log(this.currentDate);
     if (this.uSearch.origin && this.uSearch.destination && this.u.range.valid && this.u.totalPassengers > 0 && this.selectedOption && this.u.range.value.start.isSameOrAfter(this.currentDate)){
         this.uSearch.apiCall(this.flightSubscription, this.flightService, this.u.range.value.start.format('YYYY-MM-DD'), this.u.range.value.end.format('YYYY-MM-DD'),
-                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.results, this.router);
+                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.router);
     }
-  }  
+  } 
+
  searchFlightOneWay(){
     this.formSubmittedOneWay = true;
     this.formSubmitted = false;
     if(this.u.date.value && this.uSearch.origin && this.uSearch.destination && this.u.totalPassengers > 0 && this.selectedOption && this.u.date.value.isSameOrAfter(this.currentDate)){
       this.uSearch.apiCall(this.flightSubscription, this.flightService, this.u.date.value.format('YYYY-MM-DD'), '',
-                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.results, this.router);
+                  this.u.passengers.adult, this.u.passengers.children, this.u.passengers.infants, this.selectedOption.option, this.router);
     }
   }
+
   ngOnDestroy(): void {
     if(this.flightSubscription){
       this.flightSubscription.unsubscribe();
     }
   }
+
   receiveData(city: IAirport): void {
     this.uSearch.receiveData(city);
   }

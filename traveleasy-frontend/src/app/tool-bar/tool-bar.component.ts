@@ -4,7 +4,6 @@ import { NgIf } from '@angular/common';
 import {MatMenu, MatMenuItem, MatMenuTrigger}from '@angular/material/menu';
 import { AuthService } from '../service/auth.service';
 
-
 @Component({
   selector: 'app-tool-bar',
   standalone: true,

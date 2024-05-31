@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { PriceFlightService } from '../price-flight.service';
+import { PriceFlightService } from './price-flight.service';
 
 describe('PriceFlightService', () => {
   let service: PriceFlightService;

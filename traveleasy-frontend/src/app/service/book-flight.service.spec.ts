@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { BookFlightService } from '../book-flight.service';
+import { BookFlightService } from './book-flight.service';
 
 describe('BookFlightService', () => {
   let service: BookFlightService;

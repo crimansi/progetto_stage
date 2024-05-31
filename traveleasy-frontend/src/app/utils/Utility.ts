@@ -4,12 +4,12 @@ import { moment } from './Const';
 import { MatDateRangePicker, MatDatepicker } from '@angular/material/datepicker';
 import { Passenger } from './Passenger';
 import { IAirport } from '../model/IAirports';
-import { Subscription } from 'rxjs';
+import { Subscription, delay } from 'rxjs';
 import { FlightSearchService } from '../service/flight-search.service';
-import { IFlightSearch } from '../model/IFlightSearch';
 import { Router } from '@angular/router';
 export class UtilityPassenger{
     passOption: {label:string; option: string} [] =[
+        {label:'Any', option:'ANY'},
         {label: 'Economy', option: 'ECONOMY'},
         {label: 'Premium Economy', option: 'PREMIUM_ECONOMY'},
         {label: 'Business', option: 'BUSINESS'},
@@ -97,8 +97,7 @@ export class UtilitySearch{
   showSearchToOneWay: boolean = false;
 
 
-  apiCall(sub: Subscription, service: FlightSearchService, dateStart: string, dateEnd: string, adult: number, children: number, infants: number, option: string,
-    results: IFlightSearch[], router: Router){
+  apiCall(sub: Subscription, service: FlightSearchService, dateStart: string, dateEnd: string, adult: number, children: number, infants: number, option: string, router: Router){
       let queryParams: any = {
         origin: this.origin,
         destination: this.destination,
@@ -117,8 +116,7 @@ export class UtilitySearch{
       }
       sub = service.getFlights(this.orIataCode, this.destIataCode, dateStart, dateEnd, adult, children, infants, option, false).subscribe(
         data => {
-          results = data;
-          sessionStorage.setItem('results', JSON.stringify(results));
+          sessionStorage.setItem('results', JSON.stringify(data));
           router.navigate(['/flightSearch'],
                 {queryParams: queryParams}
           );

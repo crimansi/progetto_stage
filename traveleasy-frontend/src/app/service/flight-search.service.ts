@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { Observable, Subject, tap, map, BehaviorSubject, catchError } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { IFlightSearch } from '../model/IFlightSearch';
 
 @Injectable({
@@ -17,7 +17,6 @@ export class FlightSearchService {
         url += `&returnDate=${returnDate}`;
       }
       return this.http.get<IFlightSearch[]>(url).pipe(
-        tap((response: IFlightSearch[]) => console.log('Risultati della ricerca:', response)),
         catchError((error: HttpErrorResponse) => {
           throw Error(error.message);
         })

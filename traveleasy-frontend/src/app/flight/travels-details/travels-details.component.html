@@ -5,7 +5,7 @@
     </div>
     <hr>
     <p>Your flight has been booked</p>
-  </div>
+</div>
 <section class="row g-0">
     <div class="col-xl-8">
         <div class="vstack gap-4" *ngIf="offerFlight.length > 0 && offerFlight">
@@ -16,8 +16,9 @@
                 {{this.error}}
             </div>
             <div class="card rounded-4" *ngFor="let trav of offerFlight[0].travelerPricings; let i = index" style="margin-left: 20px; margin-right:20px; margin-bottom: 20px;">
-                <div class="card-header border-bottom px-4 rounded-top-4">
+                <div class="card-header border-bottom d-sm-flex justify-content-sm-between align-items-center rounded-top-4">
                     <h3 class="card-title mb-0">{{trav.travelerId}} Passenger</h3>
+                    <h6 class="text-secondary">Type: {{trav.travelerType}}</h6>
                 </div>
                 <div class="card-body py-4">
                     <div class="row g-4">

@@ -37,10 +37,9 @@ public class FlightApiController {
                                        @RequestParam Integer adults,
                                        @RequestParam(required = false, defaultValue = "0") Integer children,
                                        @RequestParam(required = false, defaultValue = "0") Integer infants,
-                                       @RequestParam(required = false, defaultValue = "ANY") TravelClass travelClass,
-                                       @RequestParam(required = false, defaultValue = "false") boolean nonStop)
+                                       @RequestParam(required = false, defaultValue = "ANY") TravelClass travelClass)
             throws ResponseException {
-        return AmadeusConnect.INSTANCE.flights(origin, destination, departDate, returnDate, adults,children, infants, travelClass, nonStop);
+        return AmadeusConnect.INSTANCE.flights(origin, destination, departDate, returnDate, adults,children, infants, travelClass);
     }
     @PostMapping("/confirm")
     public FlightPrice confirm(@RequestBody(required=true) FlightOfferSearch search) throws ResponseException {

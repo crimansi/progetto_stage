@@ -20,14 +20,13 @@ public enum AmadeusConnect {
                 .with("keyword", keyword)
                 .and("subType", Locations.ANY));
     }
-    public FlightOfferSearch[] flights(String origin, String destination, String departDate, String returnDate, Integer adults, Integer children, Integer infants, TravelClass travelClass, boolean nonStop) throws ResponseException {
+    public FlightOfferSearch[] flights(String origin, String destination, String departDate, String returnDate, Integer adults, Integer children, Integer infants, TravelClass travelClass) throws ResponseException {
         Params params = Params.with("originLocationCode", origin)
                 .and("destinationLocationCode", destination)
                 .and("departureDate", departDate)
                 .and("adults", adults)
                 .and("children", children)
                 .and("infants", infants)
-                .and("nonStop", nonStop)
                 .and("currencyCode", "EUR")
                 .and("max", 32);
         if (travelClass != TravelClass.ANY) {

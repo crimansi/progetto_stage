@@ -14,9 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface BookedRepository extends JpaRepository<Booked, Long> {
-    List<Booked> findAllByUser(User user);
+    List<Booked> findAllByUser(User user, Sort sort);
 
-    Optional<Booked> findBookedByUserAndId(User user, Long bookId);
+    List<Booked> findAllByUser(User user);
+    //Optional<Booked> findBookedByUserAndId(User user, Long bookId);
 
     void deleteBookedById(Long bookId);
 

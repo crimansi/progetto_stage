@@ -17,13 +17,8 @@ public class HotelApiController {
         return AmadeusConnect.INSTANCE.hotels(cityCode);
     }
     @GetMapping("/searchHotels")
-    public HotelOfferSearch[] searchHotelsOffer(@RequestParam String hotelIds,
-                                                @RequestParam(required = false, defaultValue = "1") Integer adults,
-                                                @RequestParam(required = false) String checkInDate,
-                                                @RequestParam(required = false) String checkOutDate,
-                                                @RequestParam(required = false, defaultValue = "1") Integer roomQuantity
-    ) throws ResponseException {
-        return AmadeusConnect.INSTANCE.hotelOffers(hotelIds, adults, checkInDate, checkOutDate, roomQuantity);
+    public HotelOfferSearch[] searchHotelsOffer(@RequestParam String hotelIds) throws ResponseException {
+        return AmadeusConnect.INSTANCE.hotelOffers(hotelIds);
     }
 
     @PostMapping("/booking")

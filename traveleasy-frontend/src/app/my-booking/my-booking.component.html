@@ -18,6 +18,10 @@
                     <i [ngClass]="{'bi bi-sort-up': !showAsc, 'bi bi-sort-down': showAsc}"></i>
                 </button>
             </div>
+            <div class="alert alert-danger rounded-4 text-center" role="alert" *ngIf="errorString.length > 0">
+                <h4>Attention!</h4>
+                <h5>{{errorString}}</h5>
+            </div>
             <div class="card border rounded-4" *ngFor="let booking of bookings" style="margin-bottom: 10px;">
                 <div class="card-header bg-body border-bottom d-md-flex justify-content-md-between align-items-center rounded-top-4">
                     <div class="d-flex align-items-center">
@@ -94,7 +98,7 @@
                     </div>
                     <div class="col-md-12 text-end">
                         <div class="text-end" style="margin:5px;">
-                            <button class="btn btn-danger rounded-circle" (click)="deleteBook(booking.id)">
+                            <button class="btn btn-danger rounded-circle" (click)="deleteBook(booking.id, booking.booking.flight.departureTime)">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
                         </div>

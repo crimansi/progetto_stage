@@ -14,6 +14,7 @@ export interface IFlightSearch{
     price: IPrice;
     pricingOptions: {
         fareType: string[];
+        refundableFare: boolean;
         includedCheckedBagsOnly: boolean;
     }
     validationAirlineCodes: string[];

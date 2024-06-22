@@ -61,7 +61,7 @@ public class FlightApiController {
             FlightOrder flightOrder = AmadeusConnect.INSTANCE.booking(flightPrice, travelers);
             Booking booking = bookingMapper.mapBooking(flightOrder);
             bookingService.saveBooking(booking, tokenUser);
-            return ResponseEntity.ok(new MessageResponse("Booking saved successfully"));
+            return ResponseEntity.ok(new MessageResponse("Booking saved"));
 
         } catch (ResponseException e) {
             return ResponseEntity.badRequest().body("Sorry! We couldn't book flight");

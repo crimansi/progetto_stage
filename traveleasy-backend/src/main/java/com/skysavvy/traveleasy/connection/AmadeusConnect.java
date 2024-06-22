@@ -50,12 +50,8 @@ public enum AmadeusConnect {
         return amadeus.referenceData.locations.hotels.byCity.get(
                 Params.with("cityCode", cityCode));
     }
-    public HotelOfferSearch[] hotelOffers(String hotelIds, Integer adults, String checkInDate, String checkOutDate, Integer roomQuantity) throws ResponseException {
-        return amadeus.shopping.hotelOffersSearch.get(Params.with("hotelIds", hotelIds)
-                                                            .and("adults", adults)
-                                                            .and("checkInDate", checkInDate)
-                                                            .and("checkOutDate", checkOutDate)
-                                                            .and("roomQuantity", roomQuantity));
+    public HotelOfferSearch[] hotelOffers(String hotelIds) throws ResponseException {
+        return amadeus.shopping.hotelOffersSearch.get(Params.with("hotelIds", hotelIds));
     }
     public HotelBooking[] hotelBooking(JsonObject body) throws ResponseException {
         return amadeus.booking.hotelBookings.post(body);

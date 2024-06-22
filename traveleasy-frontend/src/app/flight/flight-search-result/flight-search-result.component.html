@@ -190,11 +190,11 @@
             </div>
             <div class="card-body p-4 pb-0">
               <div class="row g-4">
-                <div class="col-sm-3 col-md-2 text-center">
+                <div class="col-sm-3 col-md-3 text-center">
                   <h4>{{result.itineraries[0].segments[0].departure.at.slice(11, 16)}}</h4>
-                  <p>{{result.itineraries[0].segments[0].departure.iataCode}}</p>
+                  <p>{{result.itineraries[0].segments[0].departure.iataCode}} <span *ngIf="result.itineraries[0].segments[0].departure.terminal">- Terminal {{result.itineraries[0].segments[0].departure.terminal}}</span></p>
                 </div>
-                <div class="col-sm-5 col-md-5 my-sm-auto text-center">
+                <div class="col-sm-5 col-md-3 my-sm-auto text-center">
                   <h5>{{result.itineraries[0].duration.slice(2, result.itineraries[0].duration.length).toLowerCase()}}</h5>
                   <div class="position-relative my-4">
                     <hr class="bg-primary opacity-5 position-relative">
@@ -205,11 +205,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-3 col-md-2 text-center">
+                <div class="col-sm-3 col-md-3 text-center">
                   <h4>{{result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.at.slice(11, 16)}}</h4>
-                  <p>{{result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.iataCode}}</p>
+                  <p>{{result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.iataCode}} <span *ngIf="result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.terminal">- Terminal {{result.itineraries[0].segments[result.itineraries[0].segments.length-1].arrival.terminal}}</span></p>
                 </div>
-                <div class="col-md-3 text-md-end text-center" style="margin-bottom:5px;">
+                <div class="col-md-3 text-md-end text-center">
                   <h4>{{result.travelerPricings[0].price.base}} €</h4>
                   <button type="button" class="btn btn-primary rounded-pill mb-0" (click)="onBookClick(result)">Book Now</button>
                   <button class="btn btn-link text-decoration-underline p-0 mb-0" (click)="onItemClick(result)">
@@ -218,6 +218,18 @@
                   </button>
                 </div>
               </div>
+            </div>
+            <div class="card-footer pt-4 bg-white rounded-bottom-4 align-items-center border-top-0">
+              <ul class="list-inline bg-light rounded-pill d-sm-flex text-center justify-content-sm-between mb-0" style="padding: 5px;">
+                <li class="list-inline-item text-danger" style="margin-left:10px;">Only {{result.numberOfBookableSeats}}
+                  <span *ngIf="result.numberOfBookableSeats > 1; else oneSeat"> seats bookable</span>
+                  <ng-template #oneSeat> seat bookable</ng-template> 
+                </li>
+                <li class="list-inline-item" [ngClass]="{'text-danger': !result.pricingOptions.refundableFare, 'text-success': result.pricingOptions.refundableFare}"
+                style="margin-right:10px;">
+                  <span *ngIf="!result.pricingOptions.refundableFare">Non-</span>Refundable
+                </li>
+              </ul>
             </div>
           </div>
         </div>

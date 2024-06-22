@@ -31,15 +31,21 @@ public class BookingService {
         booked.setDate(today);
         bookedRepository.save(booked);
     }
-    public List<Booked> getAllPublicBookings(String tokenUser, String sortOrder) {
+    public List<Booked> getAllPublicBookings(String tokenUser, String sort) {
         User user = findUser(tokenUser);
-        if ("asc".equalsIgnoreCase(sortOrder)) {
+        if(sort.isEmpty())
+            return bookedRepository.findAllByUser(user);
+        else{
+            Sort sortBooked = Sort.by(Sort.Direction.fromString(sort), "date");
+            return bookedRepository.findAllByUser(user, sortBooked);
+        }
+        /*if ("asc".equalsIgnoreCase(sort)) {
             return bookedRepository.findAllByUserOrderByDateAsc(user);
-        } else if ("desc".equalsIgnoreCase(sortOrder)) {
+        } else if ("desc".equalsIgnoreCase(sort)) {
             return bookedRepository.findAllByUserOrderByDateDesc(user);
         } else {
             return bookedRepository.findAllByUser(user);
-        }
+        }*/
     }
 
     @Transactional

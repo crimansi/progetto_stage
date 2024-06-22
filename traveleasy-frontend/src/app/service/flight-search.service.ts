@@ -11,8 +11,8 @@ export class FlightSearchService {
 
   constructor(private http: HttpClient){}
 
-  getFlights(origin: string, destination: string, departDate: string, returnDate: string, adults: number, children: number, infants: number, travelClass: string, nonStop: boolean): Observable<IFlightSearch[]>{
-      let url = `${this.baseUrl}?origin=${origin}&destination=${destination}&departDate=${departDate}&adults=${adults}&children=${children}&infants=${infants}&travelClass=${travelClass}&nonStop=${nonStop}`;
+  getFlights(origin: string, destination: string, departDate: string, returnDate: string, adults: number, children: number, infants: number, travelClass: string): Observable<IFlightSearch[]>{
+      let url = `${this.baseUrl}?origin=${origin}&destination=${destination}&departDate=${departDate}&adults=${adults}&children=${children}&infants=${infants}&travelClass=${travelClass};
       if (returnDate !== '') {
         url += `&returnDate=${returnDate}`;
       }

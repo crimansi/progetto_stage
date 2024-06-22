@@ -114,7 +114,7 @@ export class UtilitySearch{
       if (infants > 0) {
         queryParams.infants = infants;
       }
-      sub = service.getFlights(this.orIataCode, this.destIataCode, dateStart, dateEnd, adult, children, infants, option, false).subscribe(
+      sub = service.getFlights(this.orIataCode, this.destIataCode, dateStart, dateEnd, adult, children, infants, option).subscribe(
         data => {
           sessionStorage.setItem('results', JSON.stringify(data));
           router.navigate(['/flightSearch'],
